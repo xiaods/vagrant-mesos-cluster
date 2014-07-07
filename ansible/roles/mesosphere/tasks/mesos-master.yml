@@ -1,3 +1,4 @@
+---
 - name: Create mesos master work dir
   file: path={{mesos_work_dir}} state=directory
 
