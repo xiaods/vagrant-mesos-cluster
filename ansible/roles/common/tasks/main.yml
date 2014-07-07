@@ -1,0 +1,16 @@
+---
+# This playbook contains common plays that will be run on all nodes.
+
+- name: Executing
+  shell: echo 'Hello world!'
+
+- name: Update apt cache
+  apt: update_cache=yes cache_valid_time=3600
+
+- name: Apt install required system packages.
+  apt: pkg={{item}} state=installed
+  with_items: system_packages
+
+- name: Configure ntp servers.
+  template: src=ntp.conf.j2 dest=/etc/ntp.conf 
+  notify: restart ntp

@@ -1,0 +1,7 @@
+---
+- name: Apt install docker packages.
+  apt: pkg={{item}} state=installed
+  with_items:
+    - docker.io
+
+- file: src=/usr/bin/docker.io dest=/usr/local/bin/docker state=link

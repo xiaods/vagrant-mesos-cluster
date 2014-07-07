@@ -1,0 +1,10 @@
+- name: Create mesos master work dir
+  file: path={{mesos_work_dir}} state=directory
+
+- name: Delete master script
+  file: path=/etc/init/mesos-master.conf state=absent
+
+- name: Mesos master script
+  template: src=mesos-master.conf.j2 dest=/etc/init/mesos-master.conf
+  notify:
+    - Restart mesos-master

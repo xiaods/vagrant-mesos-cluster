@@ -1,0 +1,4 @@
+---
+
+- name: Restart mesos-master
+  service: name=mesos-master state=restarted enabled=yes sleep=5

@@ -1,0 +1,6 @@
+---
+
+- include: install.yml
+
+- include: mesos-master.yml
+  when: mesos_install_mode == "master" or mesos_install_mode == "master-slave"
