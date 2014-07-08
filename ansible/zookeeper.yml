@@ -4,5 +4,4 @@
   sudo: yes
 
   roles:
-    - common
     - zookeeper
