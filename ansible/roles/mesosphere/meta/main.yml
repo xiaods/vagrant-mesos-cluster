@@ -1,0 +1,4 @@
+---
+dependencies:
+  - { role: common }
+  - { role: docker, when: mesos_install_mode == "slave" or mesos_install_mode == "master-slave" }

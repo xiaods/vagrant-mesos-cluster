@@ -16,8 +16,5 @@
 - name: Install Mesos python bindings
   shell: easy_install {{mesos_python_dest_file}}
 
-- name: Install deimos
-  pip: name=deimos
-
 - name: Mesos default config file
   template: src=mesos.j2 dest=/etc/default/mesos

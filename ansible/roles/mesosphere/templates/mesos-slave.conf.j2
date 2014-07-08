@@ -12,6 +12,7 @@ script
     ${IP:+--ip=$IP} \
     ${PORT:+--port=$PORT} \
     ${ISOLATION:+--isolation=$ISOLATION} \
+    ${CONTAINERIZERPATH:+--containerizer_path=$CONTAINERIZERPATH} \
     $OPTS \
     >> "$LOGS"/slave.log 2>&1
 end script

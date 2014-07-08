@@ -1,4 +1,7 @@
 ---
+- name: Install deimos
+  pip: name=deimos
+
 - name: Delete slave script
   file: path=/etc/init/mesos-slave.conf state=absent
 

@@ -21,3 +21,6 @@ mesos_zookeepers: "zk://{{mesos_local_addr}}:{{mesos_local_port}}/mesos" # searc
 mesos_masters: "zk://{{mesos_local_addr}}:{{mesos_local_port}}/mesos" # search local by default
 mesos_options: "--log_dir=$LOGS"
 
+mesos_isolation: "external"
+mesos_containerizer_path: "/usr/local/bin/deimos"
+
