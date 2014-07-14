@@ -21,6 +21,13 @@ cluster = {
     mem: 512,
     ip: "10.10.30.",
     prefix: "slave"
+  },
+  marathon: {
+    nodes: 1,
+    cpus: 1,
+    mem: 512,
+    ip: "10.10.40.",
+    prefix: "marathon"
   }
 }
 
@@ -68,6 +75,15 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
               mesos_install_mode: "slave",
               mesos_ip: "#{info[:ip]}#{10+i}",
               mesos_masters: "zk://10.10.10.10:2181/mesos" # if zk connect to it, otherwise anounce other masters
+            }
+          when :marathon
+            ansible.playbook = "ansible/mesosphere.yml"
+            ansible.extra_vars = {
+              mesos_cluster_name: "vagrant-mesos-cluster",
+              mesos_install_mode: "marathon",
+              mesos_ip: "#{info[:ip]}#{10+i}",
+              mesos_masters: "zk://10.10.10.10:2181/mesos", # if zk connect to it, otherwise anounce other masters
+              marathon_zookeepers: "zk://10.10.10.10:2181/marathon"
             }
           when :zk
             ansible.playbook = "ansible/zookeeper.yml"

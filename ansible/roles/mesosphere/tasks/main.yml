@@ -6,3 +6,6 @@
 
 - include: mesos-slave.yml
   when: mesos_install_mode == "slave" or mesos_install_mode == "master-slave"
+
+- include: marathon.yml
+  when: mesos_install_mode == "marathon"

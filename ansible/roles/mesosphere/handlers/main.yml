@@ -5,3 +5,6 @@
 
 - name: Restart mesos-slave
   service: name=mesos-slave state=restarted enabled=yes sleep=5
+
+- name: Restart marathon
+  service: name=marathon state=restarted enabled=yes sleep=5
