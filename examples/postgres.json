@@ -1,0 +1,7 @@
+{
+  "container": { "image": "docker:///zaiste/postgresql", "options": ["-e", "X=7"] },
+  "id": "docker-tester",
+  "instances": "1",
+  "cpus": "0.5",
+  "mem": "128"
+}
