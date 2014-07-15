@@ -2,6 +2,9 @@
 - name: Install deimos
   pip: name=deimos
 
+- name: Mesos default config file
+  template: src=deimos.conf.j2 dest=/etc/deimos.cfg
+
 - name: Delete slave script
   file: path=/etc/init/mesos-slave.conf state=absent
 
