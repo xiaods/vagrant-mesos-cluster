@@ -6,6 +6,7 @@ respawn
 script
   [ ! -f /etc/default/mesos ]     || . /etc/default/mesos
   [ ! -f /etc/mesos/master.conf ] || . /etc/mesos/master.conf
+  [ -d $WORKDIR ] || mkdir $WORKDIR
   [ -z "${ULIMIT:-}" ] || ulimit $ULIMIT
   exec /usr/local/sbin/mesos-master \
     ${ZK:+--zk=$ZK} \

@@ -1,7 +1,4 @@
 ---
-- name: Create mesos master work dir
-  file: path={{mesos_work_dir}} state=directory
-
 - name: Delete master script
   file: path=/etc/init/mesos-master.conf state=absent
 
