@@ -1,8 +1,8 @@
 ---
-- name: Delete master script
-  file: path=/etc/init/mesos-master.conf state=absent
-
-- name: Mesos master script
+- name: Overwrite upstart script to force creation of work_dir on start
   template: src=mesos-master.conf.j2 dest=/etc/init/mesos-master.conf
-  notify:
-    - Restart mesos-master
+
+- name: Set mesos master options
+  shell: echo {{item.value}} | dd of=/etc/mesos-master/{{item.key}}
+  with_dict: mesos_options_master | default({}) # with_dict needs explicit default
+  notify: Restart mesos-master

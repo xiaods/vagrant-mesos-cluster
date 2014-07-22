@@ -5,10 +5,7 @@
 - name: Mesos default config file
   template: src=deimos.conf.j2 dest=/etc/deimos.cfg
 
-- name: Delete slave script
-  file: path=/etc/init/mesos-slave.conf state=absent
-
-- name: Mesos slave script
-  template: src=mesos-slave.conf.j2 dest=/etc/init/mesos-slave.conf
-  notify:
-    - Restart mesos-slave
+- name: Set mesos slave options
+  shell: echo {{item.value}} | dd of=/etc/mesos-slave/{{item.key}}
+  with_dict: mesos_options_slave | default({})
+  notify: Restart mesos-slave

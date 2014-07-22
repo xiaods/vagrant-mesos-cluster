@@ -1,11 +1,7 @@
 ---
 - include: install.yml
 
-- include: mesos-master.yml
-  when: mesos_install_mode == "master" or mesos_install_mode == "master-slave"
+- include: deploy.yml
 
-- include: mesos-slave.yml
-  when: mesos_install_mode == "slave" or mesos_install_mode == "master-slave"
-
-- include: marathon.yml
-  when: mesos_install_mode == "marathon"
+# - include: marathon.yml
+#   when: mesos_install_mode == "marathon"
