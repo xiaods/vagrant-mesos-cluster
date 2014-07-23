@@ -7,5 +7,8 @@
 
 - name: Set mesos slave options
   shell: echo {{item.value}} | dd of=/etc/mesos-slave/{{item.key}}
-  with_dict: mesos_options_slave | default({})
+  with_dict: mesos_options_slave | default({}) # with_dict needs explicit default
   notify: Restart mesos-slave
+
+- name: Start mesos-slave
+  service: name=mesos-slave state=started enabled=yes sleep=5
