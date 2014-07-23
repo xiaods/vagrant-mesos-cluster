@@ -16,10 +16,9 @@ mesos_masters: "{{mesos_zk}}" # search local by default
 mesos_isolation: "external"
 mesos_containerizer_path: "/usr/local/bin/deimos"
 
-marathon_enable: true
 marathon_version: "marathon-0.6.0"
 marathon_download_url: "http://downloads.mesosphere.io/marathon/{{marathon_version}}/{{marathon_version}}.tgz"
 marathon_dest_file: "/tmp/{{marathon_version}}.tgz"
 marathon_bin_folder: "/opt/marathon/{{marathon_version}}"
 marathon_log_file: "/var/log/marathon.log"
-marathon_zookeepers: "zk://localhost:2181/marathon"
+marathon_zk: "zk://localhost:2181/marathon"

@@ -4,3 +4,6 @@
 
 - include: mesos-slave.yml
   when: mesos_mode is defined and mesos_mode == "slave"
+
+- include: marathon.yml
+  when: mesos_mode is defined and mesos_mode == "marathon"
