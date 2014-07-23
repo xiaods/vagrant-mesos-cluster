@@ -31,39 +31,37 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       cfg.vm.provision :ansible do |ansible|
         # ansible parallell execution
         #ansible.limit = "all"
+        ansible.verbose = "v"
 
-        # Role based execution
-        case info["role"]
-        when "master"
-          ansible.playbook = "ansible/mesosphere.yml"
-          ansible.extra_vars = {
-            mesos_cluster_name: "vagrant-mesos-cluster",
-            mesos_install_mode: "master",
-            mesos_ip: "#{info["ip"]}",
-            mesos_zookeepers: "zk://10.10.10.10:2181/mesos"
-          }
-        when "slave"
-          ansible.playbook = "ansible/mesosphere.yml"
-          ansible.extra_vars = {
-            mesos_cluster_name: "vagrant-mesos-cluster",
-            mesos_install_mode: "slave",
-            mesos_ip: "#{info["ip"]}",
-            mesos_masters: "zk://10.10.10.10:2181/mesos" # if zk connect to it, otherwise anounce other masters
-          }
-        when "marathon"
-          ansible.playbook = "ansible/mesosphere.yml"
-          ansible.extra_vars = {
-            mesos_cluster_name: "vagrant-mesos-cluster",
-            mesos_install_mode: "marathon",
-            mesos_ip: "#{info["ip"]}",
-            mesos_masters: "zk://10.10.10.10:2181/mesos", # if zk connect to it, otherwise anounce other masters
-            marathon_zookeepers: "zk://10.10.10.10:2181/marathon"
-          }
-        when "zk"
+        if info["role"] == "zk" then
           ansible.playbook = "ansible/zookeeper.yml"
           ansible.extra_vars = {
             myid: "1"
           }
+        else
+          ansible.playbook = "ansible/mesosphere.yml"
+          ansible.extra_vars = {
+            mesos_mode: "#{info["role"]}",
+            mesos_ip: "#{info["ip"]}",
+            mesos_zk: "zk://10.10.10.10:2181/mesos"
+          }
+
+          case info["role"]
+          when "master"
+            ansible.extra_vars.merge!({
+              mesos_options_master: {
+                cluster: "vagrant-mesos-cluster",
+                work_dir: "/var/run/mesos",
+                quorum: 1
+              }
+            })
+          when "slave"
+            ansible.extra_vars.merge!({})
+          when "marathon"
+            ansible.extra_vars.merge!({
+              marathon_zk: "zk://10.10.10.10:2181/marathon"
+            })
+          end
         end
 
       end
