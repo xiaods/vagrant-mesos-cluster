@@ -2,8 +2,24 @@ require 'json'
 
 VAGRANTFILE_API_VERSION = "2"
 
+def zk_config(cluster)
+  out = []
+  count = 0
+
+  cluster.each do |k,v|
+    if k[0,2] == "zk"
+      count += 1
+      out << { "id" => count, "host" => v["ip"] }
+    end
+  end
+
+  return out
+end
+
 base_dir = File.expand_path(File.dirname(__FILE__))
 cluster = JSON.parse(IO.read(File.join(base_dir,"cluster.json")))
+zk_servers = zk_config(cluster)
+zk_uri = "zk://" + zk_servers.map{|x| x["host"] + ":2181"}.join(",")
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
@@ -29,21 +45,20 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
       # # provision nodes with ansible
       cfg.vm.provision :ansible do |ansible|
-        # ansible parallell execution
-        #ansible.limit = "all"
         ansible.verbose = "v"
 
         if info["role"] == "zk" then
           ansible.playbook = "ansible/zookeeper.yml"
           ansible.extra_vars = {
-            myid: "1"
+            zookeeper_myid: zk_servers.select{|x| x["host"] == info["ip"]}.first["id"],
+            zookeeper_servers: zk_servers
           }
         else
           ansible.playbook = "ansible/mesosphere.yml"
           ansible.extra_vars = {
             mesos_mode: "#{info["role"]}",
             mesos_ip: "#{info["ip"]}",
-            mesos_zk: "zk://10.10.10.10:2181/mesos"
+            mesos_zk: "#{zk_uri}/mesos"
           }
 
           case info["role"]
@@ -59,7 +74,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             ansible.extra_vars.merge!({})
           when "marathon"
             ansible.extra_vars.merge!({
-              marathon_zk: "zk://10.10.10.10:2181/marathon"
+              marathon_zk: "#{zk_uri}/marathon"
             })
           end
         end
