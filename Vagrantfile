@@ -1,6 +1,7 @@
 require 'json'
 
 VAGRANTFILE_API_VERSION = "2"
+DEFAULT_CLUSTER = "mesos"
 
 def servers_by_role(cluster, role)
   out = []
@@ -17,7 +18,7 @@ def servers_by_role(cluster, role)
 end
 
 base_dir = File.expand_path(File.dirname(__FILE__))
-cluster = JSON.parse(IO.read(File.join(base_dir,"cluster.json")))
+cluster = JSON.parse(IO.read(File.join(base_dir, "clusters", ENV['CLUSTER'] || DEFAULT_CLUSTER, "cluster.json")))
 zk_servers = servers_by_role(cluster, "zk")
 zk_uri = "zk://" + zk_servers.map{|x| x["host"] + ":2181"}.join(",")
 
