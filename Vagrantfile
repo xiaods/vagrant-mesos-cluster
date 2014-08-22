@@ -3,7 +3,7 @@ require 'json'
 VAGRANTFILE_API_VERSION = "2"
 DEFAULT_CLUSTER = "mesos"
 
-def servers_by_role(cluster, role)
+def hosts_by_role(cluster, role)
   out = []
   count = 0
 
@@ -19,7 +19,7 @@ end
 
 base_dir = File.expand_path(File.dirname(__FILE__))
 cluster = JSON.parse(IO.read(File.join(base_dir, "clusters", ENV['CLUSTER'] || DEFAULT_CLUSTER, "cluster.json")))
-zk_servers = servers_by_role(cluster, "zk")
+zk_servers = hosts_by_role(cluster, "zk")
 zk_uri = "zk://" + zk_servers.map{|x| x["host"] + ":2181"}.join(",")
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
@@ -62,7 +62,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
               mesos_options_master: {
                 cluster: "vagrant-mesos-cluster",
                 work_dir: "/var/run/mesos",
-                quorum: (servers_by_role(cluster, "master").length.to_f/2).ceil
+                quorum: (hosts_by_role(cluster, "master").length.to_f/2).ceil
               }
             })
           when "slave"
