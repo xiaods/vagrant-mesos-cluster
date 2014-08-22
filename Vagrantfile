@@ -38,13 +38,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         vb.customize ["modifyvm", :id, "--memory", info["config"]["mem"], "--cpus", info["config"]["cpus"], "--hwvirtex", "on" ]
       end
 
-      # make sure the mesos working dir is always present
-      master_work_dir = "/var/run/mesos"
-      if info["role"].eql? "master" then
-        cfg.vm.provision :shell, :inline => "mkdir -p #{master_work_dir}"
-      end
-
-      # # provision nodes with ansible
+      # provision nodes with ansible
       cfg.vm.provision :ansible do |ansible|
         ansible.verbose = "v"
 
