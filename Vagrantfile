@@ -24,6 +24,12 @@ zk_uri = "zk://" + zk_servers.map{|x| x["host"] + ":2181"}.join(",")
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
+  if Vagrant.has_plugin?("vagrant-cachier")
+    config.cache.scope = :machine
+    config.cache.enable :apt
+    config.cache.enable :generic, { :cache_dir => "/opt/src" }
+  end
+
   cluster.each do |hostname, info|
 
     config.vm.define hostname do |cfg|
