@@ -10,10 +10,3 @@ mesos_log_dir: "/var/log/mesos"
 mesos_ulimit: "-n 8192"
 mesos_zk: "zk://localhost:2181/mesos" # search local by default
 mesos_masters: "{{mesos_zk}}" # search local by default
-
-marathon_version: "marathon-0.6.0"
-marathon_file_name: "{{marathon_version}}.tgz"
-marathon_download_url: "http://downloads.mesosphere.io/marathon/{{marathon_version}}/{{marathon_file_name}}"
-marathon_bin_folder: "/opt/marathon/{{marathon_version}}"
-marathon_log_file: "/var/log/marathon.log"
-marathon_zk: "zk://localhost:2181/marathon"

@@ -49,16 +49,16 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             zookeeper_servers: zk_servers
           }
         else
-          ansible.playbook = "ansible/mesosphere.yml"
           ansible.extra_vars = {
-            mesos_mode: "#{info["role"]}",
             mesos_ip: "#{info["ip"]}",
             mesos_zk: "#{zk_uri}/mesos"
           }
 
           case info["role"]
           when "master"
+            ansible.playbook = "ansible/mesosphere.yml"
             ansible.extra_vars.merge!({
+              mesos_mode: "master",
               mesos_options_master: {
                 cluster: "vagrant-mesos-cluster",
                 work_dir: "/var/run/mesos",
@@ -66,8 +66,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
               }
             })
           when "slave"
-            ansible.extra_vars.merge!({})
+            ansible.playbook = "ansible/mesosphere.yml"
+            ansible.extra_vars.merge!({
+              mesos_mode: "slave"
+            })
           when "marathon"
+            ansible.playbook = "ansible/marathon.yml"
             ansible.extra_vars.merge!({
               marathon_zk: "#{zk_uri}/marathon"
             })
