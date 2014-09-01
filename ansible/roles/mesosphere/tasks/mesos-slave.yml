@@ -5,13 +5,6 @@
 - name: Mesos default config file
   template: src=deimos.conf.j2 dest=/etc/deimos.cfg
 
-- name: Set mesos slave to use deimos
-  shell: echo {{item.value}} | dd of=/etc/mesos-slave/{{item.key}}
-  with_dict:
-    isolation: "external"
-    containerizer_path: "/usr/local/bin/deimos"
-  notify: Restart mesos-slave
-
 - name: Set mesos slave options
   shell: echo {{item.value}} | dd of=/etc/mesos-slave/{{item.key}}
   with_dict: mesos_options_slave | default({}) # with_dict needs explicit default
