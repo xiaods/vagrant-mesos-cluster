@@ -77,7 +77,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
               mesos_mode: "slave"
             })
           when "marathon"
-            ansible.playbook = "ansible/marathon.yml"
+            ansible.playbook = "ansible/marathon_from_source.yml"
             ansible.extra_vars.merge!({
               marathon_zk: "#{zk_uri}/marathon"
             })

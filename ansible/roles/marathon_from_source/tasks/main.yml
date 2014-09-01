@@ -1,0 +1,25 @@
+---
+- name: Apt install required system packages. 
+  apt: pkg={{item}} state=installed
+  with_items:
+   - openjdk-7-jdk
+   - git
+
+- name: Download the sbt build tool
+  get_url: url=http://dl.bintray.com/sbt/debian/sbt-0.13.5.deb dest=/tmp/sbt-0.13.5.deb
+
+- name: Install sbt
+  apt: deb=/tmp/sbt-0.13.5.deb
+
+- name: Create /opt/src directory
+  file: state=directory path=/opt/src
+
+- name: Clone Marathon github repository
+  git: repo=https://github.com/mesosphere/marathon.git
+       dest=/opt/src/marathon
+       version={{marathon_from_source_version}}
+
+- name: Build Marathon
+  command: sbt assembly
+  args: 
+    chdir: /opt/src/marathon
