@@ -35,7 +35,7 @@
     "config": {
       "type": "virtualbox",
       "cpus": 1,
-      "mem": 256
+      "mem": 1024
     }
   },
 
