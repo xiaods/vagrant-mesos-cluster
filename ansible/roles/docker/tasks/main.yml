@@ -1,7 +1,14 @@
 ---
-- name: Apt install docker packages.
-  apt: pkg={{item}} state=installed
-  with_items:
-    - docker.io
+- name: Get Docker release tool key
+  apt_key: url="https://get.docker.io/gpg" state=present
 
-- file: src=/usr/bin/docker.io dest=/usr/local/bin/docker state=link
+- name: Add Docker deb repository
+  apt_repository:
+    repo="deb https://get.docker.io/ubuntu docker main" 
+    state=present 
+    update_cache=yes
+
+- name: Install Docker
+  apt: pkg=lxc-docker state=installed
+
+

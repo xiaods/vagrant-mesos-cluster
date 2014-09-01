@@ -74,7 +74,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
           when "slave"
             ansible.playbook = "ansible/mesosphere.yml"
             ansible.extra_vars.merge!({
-              mesos_mode: "slave"
+              mesos_mode: "slave",
+              mesos_options_slave: {
+                containerizers: "docker,mesos",
+                executor_registration_timeout: "5mins"
+              }
             })
           when "marathon"
             ansible.playbook = "ansible/marathon_from_source.yml"
