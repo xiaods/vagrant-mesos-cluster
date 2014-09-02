@@ -54,6 +54,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             zookeeper_myid: zk_servers.select{|x| x["host"] == info["ip"]}.first["id"],
             zookeeper_servers: zk_servers
           }
+	elsif info["role"] == "haproxy" then
+          ansible.playbook = "ansible/haproxy.yml"
         else
           ansible.extra_vars = {
             mesos_ip: "#{info["ip"]}",

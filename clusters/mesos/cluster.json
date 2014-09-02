@@ -77,5 +77,15 @@
       "cpus": 1,
       "mem": 1024
     }
+  },
+
+  "haproxy": {
+    "role": "haproxy",
+    "ip": "10.10.50.10",
+    "config": {
+      "type": "virtualbox",
+      "cpus": 1,
+      "mem": 512
+    }
   }
 }

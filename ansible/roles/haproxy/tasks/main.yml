@@ -1,0 +1,21 @@
+---
+
+- name: Install the required packages 
+  apt: pkg={{item}} state=installed
+  with_items:
+    - git
+    - haproxy
+    - golang
+
+- name: Create /opt/src directory
+  file: state=directory path=/opt/src
+
+- name: Clone mesos_service_discovery repo
+  git: repo=https://github.com/opencredo/mesos_service_discovery
+       dest=/opt/src/mesos_service_discovery
+       version={{mesos_service_discovery_version}}
+
+- name: Build mesos_service_discovery binary
+  command: ./build.sh
+  args:
+    chdir: /opt/src/mesos_service_discovery
