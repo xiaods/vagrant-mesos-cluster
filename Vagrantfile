@@ -59,7 +59,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
           ansible.playbook = "ansible/haproxy.yml"
           ansible.extra_vars = {
             mesos_service_discovery_marathon_ip: marathon_servers.first["host"],
-            mesos_service_discovery_marathon_port: 8080
+            mesos_service_discovery_local_host: info["ip"]
           }
         else
           ansible.extra_vars = {

@@ -4,5 +4,5 @@ start on runlevel [2345]
 respawn
 
 script
-  exec /opt/src/mesos_service_discovery/bin/mesos_service_discovery --port {{mesos_service_discovery_marathon_port}} --host {{mesos_service_discovery_marathon_ip}} >> {{mesos_service_discovery_log_file}} 2>&1
+  exec /opt/src/mesos_service_discovery/bin/mesos_service_discovery --host {{mesos_service_discovery_local_host}} --port {{mesos_service_discovery_local_port}} --marathon_host {{mesos_service_discovery_marathon_ip}} --marathon_port {{mesos_service_discovery_marathon_port}}>> {{mesos_service_discovery_log_file}} 2>&1
 end script
