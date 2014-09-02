@@ -84,7 +84,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
               mesos_mode: "slave",
               mesos_options_slave: {
                 containerizers: "docker,mesos",
-                executor_registration_timeout: "5mins"
+                executor_registration_timeout: "5mins",
+                hostname: info["ip"]
               }
             })
           when "marathon"

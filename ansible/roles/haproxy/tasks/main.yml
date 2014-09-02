@@ -7,6 +7,9 @@
     - haproxy
     - golang
 
+- name: Enable HAProxy
+  shell: echo ENABLED=1 > /etc/default/haproxy
+
 - name: Create /opt/src directory
   file: state=directory path=/opt/src
 
@@ -19,6 +22,9 @@
   command: ./build.sh
   args:
     chdir: /opt/src/mesos_service_discovery
+  notify:
+    - Restart HAProxy
+    - Restart mesos_service_discovery
 
 - name: mesos_service_discovery upstart script
   template: src=mesos_service_discovery.conf.j2 dest=/etc/init/mesos_service_discovery.conf
