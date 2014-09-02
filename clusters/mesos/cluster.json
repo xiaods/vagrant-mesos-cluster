@@ -59,9 +59,19 @@
     }
   },
 
-  "marathon" : {
+  "marathon0" : {
     "role": "marathon",
     "ip": "10.10.40.10",
+    "config": {
+      "type": "virtualbox",
+      "cpus": 1,
+      "mem": 1024
+    }
+  }, 
+
+  "marathon1" : {
+    "role": "marathon",
+    "ip": "10.10.40.11",
     "config": {
       "type": "virtualbox",
       "cpus": 1,
