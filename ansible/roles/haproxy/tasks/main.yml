@@ -1,0 +1,33 @@
+---
+
+- name: Install the required packages 
+  apt: pkg={{item}} state=installed
+  with_items:
+    - git
+    - haproxy
+    - golang
+
+- name: Enable HAProxy
+  shell: echo ENABLED=1 > /etc/default/haproxy
+
+- name: Create /opt/src directory
+  file: state=directory path=/opt/src
+
+- name: Clone mesos_service_discovery repo
+  git: repo=https://github.com/opencredo/mesos_service_discovery
+       dest=/opt/src/mesos_service_discovery
+       version={{mesos_service_discovery_version}}
+
+- name: Build mesos_service_discovery binary
+  command: ./build.sh
+  args:
+    chdir: /opt/src/mesos_service_discovery
+  notify:
+    - Restart HAProxy
+    - Restart mesos_service_discovery
+
+- name: mesos_service_discovery upstart script
+  template: src=mesos_service_discovery.conf.j2 dest=/etc/init/mesos_service_discovery.conf
+  notify:
+    - Restart HAProxy
+    - Restart mesos_service_discovery

@@ -21,6 +21,7 @@ base_dir = File.expand_path(File.dirname(__FILE__))
 cluster = JSON.parse(IO.read(File.join(base_dir, "clusters", ENV['CLUSTER'] || DEFAULT_CLUSTER, "cluster.json")))
 zk_servers = hosts_by_role(cluster, "zk")
 zk_uri = "zk://" + zk_servers.map{|x| x["host"] + ":2181"}.join(",")
+marathon_servers = hosts_by_role(cluster, "marathon")
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
@@ -54,6 +55,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             zookeeper_myid: zk_servers.select{|x| x["host"] == info["ip"]}.first["id"],
             zookeeper_servers: zk_servers
           }
+        elsif info["role"] == "haproxy" then
+          ansible.playbook = "ansible/haproxy.yml"
+          ansible.extra_vars = {
+            mesos_service_discovery_marathon_ip: marathon_servers.first["host"],
+            mesos_service_discovery_local_host: info["ip"]
+          }
         else
           ansible.extra_vars = {
             mesos_ip: "#{info["ip"]}",
@@ -77,7 +84,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
               mesos_mode: "slave",
               mesos_options_slave: {
                 containerizers: "docker,mesos",
-                executor_registration_timeout: "5mins"
+                executor_registration_timeout: "5mins",
+                hostname: info["ip"]
               }
             })
           when "marathon"
