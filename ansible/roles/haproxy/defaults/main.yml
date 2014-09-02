@@ -1,3 +1,6 @@
 ---
 
 mesos_service_discovery_version: "HEAD"
+mesos_service_discovery_log_file: "/var/log/mesos_service_discovery.log"
+mesos_service_discovery_marathon_port: "8080"
+mesos_service_discovery_marathon_ip: "localhost"
