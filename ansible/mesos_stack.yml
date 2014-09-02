@@ -1,0 +1,9 @@
+---
+- hosts: all
+  gather_facts: false
+  sudo: yes
+
+  roles:
+    - zookeeper
+    - mesosphere
+    - marathon_from_source

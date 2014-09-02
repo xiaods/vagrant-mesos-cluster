@@ -79,6 +79,16 @@
     }
   },
 
+  "mesos-stack1" : {
+    "role": "mesos_stack",
+    "ip": "10.10.60.10",
+    "config": {
+      "type": "virtualbox",
+      "cpus": 1,
+      "mem": 4096
+    }
+  },
+
   "haproxy": {
     "role": "haproxy",
     "ip": "10.10.50.10",
