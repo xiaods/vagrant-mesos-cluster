@@ -1,19 +1,8 @@
 ---
-- file: path=/opt/src state=directory recurse=yes
+- include: install_from_bin.yml
+  when: marathon_install_mode == "bin"
 
-- name: Download marathon tarball
-  get_url: url={{marathon_download_url}} dest=/opt/src/{{marathon_file_name}}
+- include: install_from_source.yml
+  when: marathon_install_mode == "source"
 
-- name: Make sure bin folder exists
-  file: state=directory path={{marathon_bin_folder}}
-
-- name: Unpack marathon tarball.
-  command: tar zxf /opt/src/{{marathon_file_name}} --strip-components=1 -C {{marathon_bin_folder}} chdir=/tmp creates={{marathon_bin_folder}}/bin
-
-- name: Delete marathon upstart script
-  file: path=/etc/init/marathon.conf state=absent
-
-- name: Marathon upstart script
-  template: src=marathon.conf.j2 dest=/etc/init/marathon.conf
-  notify:
-    - Restart marathon
+- include: deploy.yml
