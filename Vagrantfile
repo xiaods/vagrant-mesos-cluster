@@ -89,9 +89,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
               }
             })
           when "marathon"
-            ansible.playbook = "ansible/marathon_from_source.yml"
+            ansible.playbook = "ansible/marathon.yml"
             ansible.extra_vars.merge!({
-              marathon_zk: "#{zk_uri}/marathon"
+              marathon_install_mode: "source",
+              marathon_zk: "#{zk_uri}/marathon",
+              marathon_runtime_params: "--event_subscriber http_callback"
             })
           end
         end

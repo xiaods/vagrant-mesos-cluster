@@ -1,5 +1,0 @@
----
-
-marathon_from_source_version: "3abaab6c3a83283713d8b3c9886cf2acd0b650db" 
-marathon_log_file: "/var/log/marathon.log"
-marathon_zk: "zk://localhost:2181/marathon"
