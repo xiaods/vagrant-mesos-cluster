@@ -1,8 +1,13 @@
 ---
+marathon_install_mode: "bin" # 'bin' or 'source'
 
 marathon_version: "marathon-0.6.0"
 marathon_file_name: "{{marathon_version}}.tgz"
 marathon_download_url: "http://downloads.mesosphere.io/marathon/{{marathon_version}}/{{marathon_file_name}}"
-marathon_bin_folder: "/opt/marathon/{{marathon_version}}"
+
+marathon_from_source_version: "3abaab6c3a83283713d8b3c9886cf2acd0b650db"
+
+marathon_bin_folder: "/opt/marathon"
 marathon_log_file: "/var/log/marathon.log"
 marathon_zk: "zk://localhost:2181/marathon"
+marathon_runtime_params: ""

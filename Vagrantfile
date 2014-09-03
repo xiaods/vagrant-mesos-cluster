@@ -19,9 +19,10 @@ end
 
 base_dir = File.expand_path(File.dirname(__FILE__))
 cluster = JSON.parse(IO.read(File.join(base_dir, "clusters", ENV['CLUSTER'] || DEFAULT_CLUSTER, "cluster.json")))
-zk_servers = hosts_by_role(cluster, "zk")
+zk_servers = hosts_by_role(cluster, "zk").concat(hosts_by_role(cluster, "mesos_stack"))
 zk_uri = "zk://" + zk_servers.map{|x| x["host"] + ":2181"}.join(",")
 marathon_servers = hosts_by_role(cluster, "marathon")
+mesos_servers = hosts_by_role(cluster, "master").concat(hosts_by_role(cluster, "mesos_stack"))
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
@@ -61,6 +62,21 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             mesos_service_discovery_marathon_ip: marathon_servers.first["host"],
             mesos_service_discovery_local_host: info["ip"]
           }
+        elsif info["role"] == "mesos_stack" then
+          ansible.playbook = "ansible/mesos_stack.yml"
+          ansible.extra_vars = {
+            mesos_ip: "#{info["ip"]}",
+            mesos_zk: "#{zk_uri}/mesos",
+            mesos_mode: "master",
+            mesos_options_master: {
+              cluster: "vagrant-mesos-cluster",
+              work_dir: "/var/run/mesos",
+              quorum: (mesos_servers.length.to_f/2).ceil
+            },
+            marathon_install_mode: "source",
+            marathon_zk: "#{zk_uri}/marathon",
+            marathon_runtime_params: "--event_subscriber http_callback"
+          }
         else
           ansible.extra_vars = {
             mesos_ip: "#{info["ip"]}",
@@ -89,9 +105,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
               }
             })
           when "marathon"
-            ansible.playbook = "ansible/marathon_from_source.yml"
+            ansible.playbook = "ansible/marathon.yml"
             ansible.extra_vars.merge!({
-              marathon_zk: "#{zk_uri}/marathon"
+              marathon_install_mode: "source",
+              marathon_zk: "#{zk_uri}/marathon",
+              marathon_runtime_params: "--event_subscriber http_callback"
             })
           end
         end
