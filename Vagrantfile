@@ -73,7 +73,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
               work_dir: "/var/run/mesos",
               quorum: (mesos_servers.length.to_f/2).ceil 
             },
-            marathon_zk: "#{zk_uri}/marathon" 
+            marathon_install_mode: "source",
+            marathon_zk: "#{zk_uri}/marathon",
+            marathon_runtime_params: "--event_subscriber http_callback"
           }
         else
           ansible.extra_vars = {
