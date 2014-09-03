@@ -62,16 +62,16 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             mesos_service_discovery_marathon_ip: marathon_servers.first["host"],
             mesos_service_discovery_local_host: info["ip"]
           }
-        elsif info["role"] == "mesos_stack" then 
+        elsif info["role"] == "mesos_stack" then
           ansible.playbook = "ansible/mesos_stack.yml"
           ansible.extra_vars = {
             mesos_ip: "#{info["ip"]}",
-            mesos_zk: "#{zk_uri}/mesos", 
-            mesos_mode: "master", 
+            mesos_zk: "#{zk_uri}/mesos",
+            mesos_mode: "master",
             mesos_options_master: {
               cluster: "vagrant-mesos-cluster",
               work_dir: "/var/run/mesos",
-              quorum: (mesos_servers.length.to_f/2).ceil 
+              quorum: (mesos_servers.length.to_f/2).ceil
             },
             marathon_install_mode: "source",
             marathon_zk: "#{zk_uri}/marathon",
