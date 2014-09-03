@@ -76,6 +76,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             marathon_install_mode: "source",
             marathon_zk: "#{zk_uri}/marathon",
             marathon_runtime_params: "--event_subscriber http_callback"
+            zookeeper_myid: zk_servers.select{|x| x["host"] == info["ip"]}.first["id"],
+            zookeeper_servers: zk_servers
           }
         else
           ansible.extra_vars = {
