@@ -1,12 +1,12 @@
 [mesos-masters]
-mesos01 mesos_ip=10.0.1.11 zookeeper_myid=1
-mesos02 mesos_ip=10.0.2.11 zookeeper_myid=2
-mesos03 mesos_ip=10.0.3.11 zookeeper_myid=3
+10.0.1.11 mesos_ip=10.0.1.11 zookeeper_myid=1
+10.0.2.11 mesos_ip=10.0.2.11 zookeeper_myid=2
+10.0.3.11 mesos_ip=10.0.3.11 zookeeper_myid=3
 
 [haproxy]
-haproxy01 mesos_service_discovery_local_host=10.0.1.21
-haproxy02 mesos_service_discovery_local_host=10.0.2.21
-haproxy02 mesos_service_discovery_local_host=10.0.3.21
+10.0.1.21 mesos_service_discovery_local_host=10.0.1.21
+10.0.2.21 mesos_service_discovery_local_host=10.0.2.21
+10.0.3.21 mesos_service_discovery_local_host=10.0.3.21
 
 [mesos-slaves]
 
