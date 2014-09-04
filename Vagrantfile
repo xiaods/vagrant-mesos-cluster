@@ -4,17 +4,8 @@ VAGRANTFILE_API_VERSION = "2"
 DEFAULT_CLUSTER = "mesos"
 
 def hosts_by_role(cluster, role)
-  out = []
-  count = 0
-
-  cluster.each do |k,v|
-    if v["role"] == role
-      count += 1
-      out << { "id" => count, "host" => v["ip"] }
-    end
-  end
-
-  return out
+  servers = cluster.values.select { |v| v['role'] == role }
+  servers.each_with_index.map { |s,i| { "id" => i + 1, "host" => s["ip"] } }
 end
 
 base_dir = File.expand_path(File.dirname(__FILE__))
