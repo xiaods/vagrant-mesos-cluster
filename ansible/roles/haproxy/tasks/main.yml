@@ -30,4 +30,4 @@
   service: name=mesos_service_discovery state=restarted enabled=yes
 
 - name: Restart HAProxy
-  service: name=haporxy state=restarted enabled=yes
+  service: name=haproxy state=restarted enabled=yes
