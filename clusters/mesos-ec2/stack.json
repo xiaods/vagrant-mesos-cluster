@@ -1,0 +1,388 @@
+
+{
+  "AWSTemplateFormatVersion" : "2010-09-09",
+
+  "Description" : "Mesos cluster in VPC",
+
+  "Parameters" : {
+    "KeyName": {
+      "Description" : "Name of an existing EC2 KeyPair to enable SSH access to the instance",
+      "Type": "String",
+      "MinLength": "1",
+      "MaxLength": "255",
+      "AllowedPattern" : "[\\x20-\\x7E]*",
+      "ConstraintDescription" : "can contain only ASCII characters."
+    },
+
+    "VpcId": {
+      "Description": "VPC ID",
+      "Type": "String"
+    },
+
+    "SubnetIdPub1": {
+      "Description": "Subnet public 1 (10.0.1.0/16) id",
+      "Type": "String"
+    },
+
+    "SubnetIdPub2": {
+      "Description": "Subnet public 2 (10.0.2.0/16) id",
+      "Type": "String"
+    },
+
+    "SubnetIdPub3": {
+      "Description": "Subnet public 3 (10.0.3.0/16) id",
+      "Type": "String"
+    },
+
+    "MesosStackInstanceType": {
+      "Description": "Mesos Stack instance type",
+      "Type": "String",
+      "Default": "m3.medium"
+    },
+
+    "MesosSlaveInstanceType": {
+      "Description": "Slave instance type",
+      "Type": "String",
+      "Default": "m3.large"
+    },
+
+    "HAProxyDiscoveryInstanceType": {
+      "Description": "HAProxy discovery instance type",
+      "Type": "String",
+      "Default": "t2.small"
+    },
+
+    "HAProxyPublicInstanceType": {
+      "Description": "HAProxy public instance type",
+      "Type": "String",
+      "Default": "t2.small"
+    }
+  },
+
+  "Mappings" : {
+    "RegionMap" : {
+      "us-east-1"      : { "AMI" : "ami-10389d78" }
+    }
+  },
+
+  "Resources" : {
+    "MesosStackInstance1Pub1" : {
+      "Type" : "AWS::EC2::Instance",
+      "Properties" : {
+        "InstanceType" : { "Ref" : "MesosStackInstanceType" },
+        "KeyName" : { "Ref" : "KeyName" },
+        "ImageId" : { "Fn::FindInMap" : [ "RegionMap", { "Ref" : "AWS::Region" }, "AMI" ]},
+        "Monitoring" : true,
+        "PrivateIpAddress" : "10.0.1.11",
+        "SubnetId": { "Ref": "SubnetIdPub1" },
+        "Tags": [
+           { "Key" : "Name", "Value": "Mesos MasMarZoo 1 pub1" },
+           { "Key" : "Role", "Value" : "mesos_stack" }
+        ],
+        "BlockDeviceMappings" : [
+          { "DeviceName" : "/dev/sda1", "Ebs" : { "VolumeSize" : "50", "VolumeType" : "gp2" } }
+        ],
+        "SecurityGroupIds" : [
+          { "Ref": "MesosSshGroup" }, { "Ref": "MesosStackGroup" }
+        ]
+      }
+    },
+
+    "MesosStackEIP1Pub1" : {
+      "Type": "AWS::EC2::EIP",
+      "Properties": {
+        "InstanceId" : { "Ref" : "MesosStackInstance1Pub1" },
+        "Domain" : "vpc"
+      }
+    },
+
+    "MesosStackInstance1Pub2" : {
+      "Type" : "AWS::EC2::Instance",
+      "Properties" : {
+        "InstanceType" : { "Ref" : "MesosStackInstanceType" },
+        "KeyName" : { "Ref" : "KeyName" },
+        "ImageId" : { "Fn::FindInMap" : [ "RegionMap", { "Ref" : "AWS::Region" }, "AMI" ]},
+        "Monitoring" : true,
+        "PrivateIpAddress" : "10.0.2.11",
+        "SubnetId": { "Ref": "SubnetIdPub2" },
+        "Tags": [
+           { "Key" : "Name", "Value": "Mesos MasMarZoo 1 pub2" },
+           { "Key" : "Role", "Value" : "mesos_stack" }
+        ],
+        "BlockDeviceMappings" : [
+          { "DeviceName" : "/dev/sda1", "Ebs" : { "VolumeSize" : "50", "VolumeType" : "gp2" } }
+        ],
+        "SecurityGroupIds" : [
+          { "Ref": "MesosSshGroup" }, { "Ref": "MesosStackGroup" }
+        ]
+      }
+    },
+
+    "MesosStackEIP1Pub2" : {
+      "Type": "AWS::EC2::EIP",
+      "Properties": {
+        "InstanceId" : { "Ref" : "MesosStackInstance1Pub2" },
+        "Domain" : "vpc"
+      }
+    },
+
+    "MesosStackInstance1Pub3" : {
+      "Type" : "AWS::EC2::Instance",
+      "Properties" : {
+        "InstanceType" : { "Ref" : "MesosStackInstanceType" },
+        "KeyName" : { "Ref" : "KeyName" },
+        "ImageId" : { "Fn::FindInMap" : [ "RegionMap", { "Ref" : "AWS::Region" }, "AMI" ]},
+        "Monitoring" : true,
+        "PrivateIpAddress" : "10.0.3.11",
+        "SubnetId": { "Ref": "SubnetIdPub3" },
+        "Tags": [
+           { "Key" : "Name", "Value": "Mesos MasMarZoo 1 pub3" },
+           { "Key" : "Role", "Value" : "mesos_stack" }
+        ],
+        "BlockDeviceMappings" : [
+          { "DeviceName" : "/dev/sda1", "Ebs" : { "VolumeSize" : "50", "VolumeType" : "gp2" } }
+        ],
+        "SecurityGroupIds" : [
+          { "Ref": "MesosSshGroup" }, { "Ref": "MesosStackGroup" }
+        ]
+      }
+    },
+
+    "MesosStackEIP1Pub3" : {
+      "Type": "AWS::EC2::EIP",
+      "Properties": {
+        "InstanceId" : { "Ref" : "MesosStackInstance1Pub3" },
+        "Domain" : "vpc"
+      }
+    },
+
+    "MesosSlaveInstance1Pub1" : {
+      "Type" : "AWS::EC2::Instance",
+      "Properties" : {
+        "InstanceType" : { "Ref" : "MesosSlaveInstanceType" },
+        "KeyName" : { "Ref" : "KeyName" },
+        "ImageId" : { "Fn::FindInMap" : [ "RegionMap", { "Ref" : "AWS::Region" }, "AMI" ]},
+        "Monitoring" : true,
+        "PrivateIpAddress" : "10.0.1.101",
+        "SubnetId": { "Ref": "SubnetIdPub1" },
+        "Tags": [
+           { "Key" : "Name", "Value": "Mesos Slave 1 pub1" },
+           { "Key" : "Role", "Value" : "mesosphere" }
+        ],
+        "BlockDeviceMappings" : [
+          { "DeviceName" : "/dev/sda1", "Ebs" : { "VolumeSize" : "10", "VolumeType" : "gp2" } },
+          { "DeviceName" : "/dev/sdb", "Ebs" : { "VolumeSize" : "20", "VolumeType" : "gp2" } }
+        ],
+        "SecurityGroupIds" : [
+          { "Ref": "MesosSshGroup" }, { "Ref": "MesosSlaveGroup" }
+        ]
+      }
+    },
+
+    "MesosSlaveInstance1Pub2" : {
+      "Type" : "AWS::EC2::Instance",
+      "Properties" : {
+        "InstanceType" : { "Ref" : "MesosSlaveInstanceType" },
+        "KeyName" : { "Ref" : "KeyName" },
+        "ImageId" : { "Fn::FindInMap" : [ "RegionMap", { "Ref" : "AWS::Region" }, "AMI" ]},
+        "Monitoring" : true,
+        "PrivateIpAddress" : "10.0.2.101",
+        "SubnetId": { "Ref": "SubnetIdPub2" },
+        "Tags": [
+           { "Key" : "Name", "Value": "Mesos Slave 1 pub2" },
+           { "Key" : "Role", "Value" : "mesosphere" }
+        ],
+        "BlockDeviceMappings" : [
+          { "DeviceName" : "/dev/sda1", "Ebs" : { "VolumeSize" : "10", "VolumeType" : "gp2" } },
+          { "DeviceName" : "/dev/sdb", "Ebs" : { "VolumeSize" : "20", "VolumeType" : "gp2" } }
+        ],
+        "SecurityGroupIds" : [
+          { "Ref": "MesosSshGroup" }, { "Ref": "MesosSlaveGroup" }
+        ]
+      }
+    },
+
+    "MesosSlaveInstance1Pub3" : {
+      "Type" : "AWS::EC2::Instance",
+      "Properties" : {
+        "InstanceType" : { "Ref" : "MesosSlaveInstanceType" },
+        "KeyName" : { "Ref" : "KeyName" },
+        "ImageId" : { "Fn::FindInMap" : [ "RegionMap", { "Ref" : "AWS::Region" }, "AMI" ]},
+        "Monitoring" : true,
+        "PrivateIpAddress" : "10.0.3.101",
+        "SubnetId": { "Ref": "SubnetIdPub3" },
+        "Tags": [
+           { "Key" : "Name", "Value": "Mesos Slave 1 pub3" },
+           { "Key" : "Role", "Value" : "mesosphere" }
+        ],
+        "BlockDeviceMappings" : [
+          { "DeviceName" : "/dev/sda1", "Ebs" : { "VolumeSize" : "10", "VolumeType" : "gp2" } },
+          { "DeviceName" : "/dev/sdb", "Ebs" : { "VolumeSize" : "20", "VolumeType" : "gp2" } }
+        ],
+        "SecurityGroupIds" : [
+          { "Ref": "MesosSshGroup" }, { "Ref": "MesosSlaveGroup" }
+        ]
+      }
+    },
+
+        "HAProxyDiscoveryInstance1Pub1" : {
+      "Type" : "AWS::EC2::Instance",
+      "Properties" : {
+        "InstanceType" : { "Ref" : "HAProxyDiscoveryInstanceType" },
+        "KeyName" : { "Ref" : "KeyName" },
+        "ImageId" : { "Fn::FindInMap" : [ "RegionMap", { "Ref" : "AWS::Region" }, "AMI" ]},
+        "Monitoring" : true,
+        "PrivateIpAddress" : "10.0.1.21",
+        "SubnetId": { "Ref": "SubnetIdPub1" },
+        "Tags": [
+           { "Key" : "Name", "Value": "HAproxy discovery 1 pub1" },
+           { "Key" : "Role", "Value" : "haproxy" }
+        ],
+        "BlockDeviceMappings" : [
+          { "DeviceName" : "/dev/sda1", "Ebs" : { "VolumeSize" : "10", "VolumeType" : "gp2" } }
+        ],
+        "SecurityGroupIds" : [
+          { "Ref": "MesosSshGroup" }, { "Ref": "HAProxyDiscoveryGroup" }
+        ]
+      }
+    },
+
+    "HAProxyDiscoveryInstance1Pub2" : {
+      "Type" : "AWS::EC2::Instance",
+      "Properties" : {
+        "InstanceType" : { "Ref" : "HAProxyDiscoveryInstanceType" },
+        "KeyName" : { "Ref" : "KeyName" },
+        "ImageId" : { "Fn::FindInMap" : [ "RegionMap", { "Ref" : "AWS::Region" }, "AMI" ]},
+        "Monitoring" : true,
+        "PrivateIpAddress" : "10.0.2.21",
+        "SubnetId": { "Ref": "SubnetIdPub2" },
+        "Tags": [
+           { "Key" : "Name", "Value": "HAproxy discovery 1 pub2" },
+           { "Key" : "Role", "Value" : "haproxy" }
+        ],
+        "BlockDeviceMappings" : [
+          { "DeviceName" : "/dev/sda1", "Ebs" : { "VolumeSize" : "10", "VolumeType" : "gp2" } }
+        ],
+        "SecurityGroupIds" : [
+          { "Ref": "MesosSshGroup" }, { "Ref": "HAProxyDiscoveryGroup" }
+        ]
+      }
+    },
+
+    "HAProxyDiscoveryInstance1Pub3" : {
+      "Type" : "AWS::EC2::Instance",
+      "Properties" : {
+        "InstanceType" : { "Ref" : "HAProxyDiscoveryInstanceType" },
+        "KeyName" : { "Ref" : "KeyName" },
+        "ImageId" : { "Fn::FindInMap" : [ "RegionMap", { "Ref" : "AWS::Region" }, "AMI" ]},
+        "Monitoring" : true,
+        "PrivateIpAddress" : "10.0.3.21",
+        "SubnetId": { "Ref": "SubnetIdPub3" },
+        "Tags": [
+           { "Key" : "Name", "Value": "HAproxy discovery 1 pub3" },
+           { "Key" : "Role", "Value" : "haproxy" }
+        ],
+        "BlockDeviceMappings" : [
+          { "DeviceName" : "/dev/sda1", "Ebs" : { "VolumeSize" : "10", "VolumeType" : "gp2" } }
+        ],
+        "SecurityGroupIds" : [
+          { "Ref": "MesosSshGroup" }, { "Ref": "HAProxyDiscoveryGroup" }
+        ]
+      }
+    },
+
+    "HAProxyPublicInstance1Pub1" : {
+      "Type" : "AWS::EC2::Instance",
+      "Properties" : {
+        "InstanceType" : { "Ref" : "HAProxyPublicInstanceType" },
+        "KeyName" : { "Ref" : "KeyName" },
+        "ImageId" : { "Fn::FindInMap" : [ "RegionMap", { "Ref" : "AWS::Region" }, "AMI" ]},
+        "Monitoring" : true,
+        "PrivateIpAddress" : "10.0.1.250",
+        "SubnetId": { "Ref": "SubnetIdPub1" },
+        "Tags": [
+          { "Key" : "Name", "Value": "HAproxy public 1 pub1" },
+          { "Key" : "Role", "Value" : "haproxy" },
+          { "Key" : "Cluster", "Value" : "mesos" }
+        ],
+        "BlockDeviceMappings" : [
+          { "DeviceName" : "/dev/sda1", "Ebs" : { "VolumeSize" : "10", "VolumeType" : "gp2" } }
+        ],
+        "SecurityGroupIds" : [
+          { "Ref": "MesosSshGroup" }, { "Ref": "HAProxyPublicGroup" }
+        ]
+      }
+    },
+
+    "HAProxyPublicEIP1Pub1" : {
+      "Type": "AWS::EC2::EIP",
+      "Properties": {
+        "InstanceId" : { "Ref" : "HAProxyPublicInstance1Pub1" },
+        "Domain" : "vpc"
+      }
+    },
+
+    "MesosSshGroup" : {
+      "Type" : "AWS::EC2::SecurityGroup",
+      "Properties" : {
+        "GroupDescription" : "SSH inbound security",
+        "VpcId" : { "Ref" : "VpcId" },
+        "SecurityGroupIngress" : [
+          { "IpProtocol" : "tcp", "FromPort" : "22", "ToPort" : "22", "CidrIp" : "10.0.0.0/16" }
+        ]
+      }
+    },
+
+    "MesosStackGroup" : {
+      "Type" : "AWS::EC2::SecurityGroup",
+      "Properties" : {
+        "GroupDescription" : "mesos_stack role security group",
+        "VpcId" : { "Ref" : "VpcId" },
+        "SecurityGroupIngress" : [
+          { "IpProtocol" : "tcp", "FromPort" : "1024", "ToPort" : "65535", "CidrIp" : "10.0.0.0/16" }
+        ]
+      }
+    },
+
+    "MesosSlaveGroup" : {
+      "Type" : "AWS::EC2::SecurityGroup",
+      "Properties" : {
+        "GroupDescription" : "mesos slave security group",
+        "VpcId" : { "Ref" : "VpcId" },
+        "SecurityGroupIngress" : [
+          { "IpProtocol" : "tcp", "FromPort" : "1024", "ToPort" : "65535", "CidrIp" : "10.0.0.0/16" }
+        ]
+      }
+    },
+
+    "HAProxyDiscoveryGroup" : {
+      "Type" : "AWS::EC2::SecurityGroup",
+      "Properties" : {
+        "GroupDescription" : "haproxy discovery security group",
+        "VpcId" : { "Ref" : "VpcId" },
+        "SecurityGroupIngress" : [
+          { "IpProtocol" : "tcp", "FromPort" : "1024", "ToPort" : "65535", "CidrIp" : "10.0.0.0/16" }
+        ]
+      }
+    },
+
+    "HAProxyPublicGroup" : {
+      "Type" : "AWS::EC2::SecurityGroup",
+      "Properties" : {
+        "GroupDescription" : "haproxy discovery security group",
+        "VpcId" : { "Ref" : "VpcId" },
+        "SecurityGroupIngress" : [
+          { "IpProtocol" : "tcp", "FromPort" : "80", "ToPort" : "80", "CidrIp" : "0.0.0.0/0" },
+          { "IpProtocol" : "tcp", "FromPort" : "443", "ToPort" : "443", "CidrIp" : "0.0.0.0/0" },
+          { "IpProtocol" : "tcp", "FromPort" : "1024", "ToPort" : "65535", "CidrIp" : "10.0.0.0/16" }
+        ]
+      }
+    }
+  },
+
+  "Outputs" : {
+    "HAProxyPublic1Pub1IP" : {
+      "Value" : { "Ref" : "HAProxyPublicEIP1Pub1" }
+    }
+  }
+}
