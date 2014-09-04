@@ -1,0 +1,6 @@
+---
+mesos_mode: slave
+mesos_options_slave:
+  containerizers: docker,mesos
+  executor_registration_timeout: 5mins
+mesos_zk: zk://10.0.1.11:2181,10.0.2.11:2181,10.0.3.11:2181/mesos

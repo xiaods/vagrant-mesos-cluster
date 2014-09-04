@@ -1,6 +1,6 @@
 ---
 zookeeper_version: 3.4.6
-zookeeper_url: ftp://apache.belnet.be/mirrors/ftp.apache.org/zookeeper/zookeeper-{{zookeeper_version}}/zookeeper-{{zookeeper_version}}.tar.gz
+zookeeper_url: http://www.trieuvan.com/apache/zookeeper/zookeeper-{{zookeeper_version}}/zookeeper-{{zookeeper_version}}.tar.gz
 zookeeper_dir: /opt/zookeeper-{{zookeeper_version}}
 zookeeper_data: /var/lib/zookeeper
 zookeeper_logs: /var/log/zookeeper

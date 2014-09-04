@@ -10,5 +10,8 @@
   with_dict: mesos_options_slave | default({}) # with_dict needs explicit default
   notify: Restart mesos-slave
 
+- name: Set mesos slave hostname to its IP
+  shell: echo {{mesos_ip}} | dd of=/etc/mesos-slave/hostname
+
 - name: Start mesos-slave
   service: name=mesos-slave state=started enabled=yes sleep=5
