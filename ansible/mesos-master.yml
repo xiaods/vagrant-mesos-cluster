@@ -1,5 +1,5 @@
 ---
-- hosts: all
+- hosts: mesos-masters
   gather_facts: false
   sudo: yes
 
