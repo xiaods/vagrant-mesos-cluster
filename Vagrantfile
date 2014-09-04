@@ -4,17 +4,8 @@ VAGRANTFILE_API_VERSION = "2"
 DEFAULT_CLUSTER = "mesos"
 
 def hosts_by_role(cluster, role)
-  out = []
-  count = 0
-
-  cluster.each do |k,v|
-    if v["role"] == role
-      count += 1
-      out << { "id" => count, "host" => v["ip"] }
-    end
-  end
-
-  return out
+  servers = cluster.values.select { |v| v['role'] == role }
+  servers.each_with_index.map { |s,i| { "id" => i + 1, "host" => s["ip"] } }
 end
 
 base_dir = File.expand_path(File.dirname(__FILE__))
@@ -75,7 +66,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             },
             marathon_install_mode: "source",
             marathon_zk: "#{zk_uri}/marathon",
-            marathon_runtime_params: "--event_subscriber http_callback"
+            marathon_runtime_params: "--event_subscriber http_callback",
             zookeeper_myid: zk_servers.select{|x| x["host"] == info["ip"]}.first["id"],
             zookeeper_servers: zk_servers
           }
