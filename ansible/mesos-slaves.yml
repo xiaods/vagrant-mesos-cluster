@@ -1,9 +1,7 @@
 ---
-- hosts: mesos-masters
+- hosts: mesos-slaves
   gather_facts: false
   sudo: yes
 
   roles:
-    - zookeeper
     - mesosphere
-    - marathon

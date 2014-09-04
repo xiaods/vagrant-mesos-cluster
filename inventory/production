@@ -9,4 +9,6 @@
 10.0.3.21 mesos_service_discovery_local_host=10.0.3.21
 
 [mesos-slaves]
-
+10.0.1.101 mesos_ip=10.0.1.101
+10.0.2.101 mesos_ip=10.0.2.101
+10.0.3.101 mesos_ip=10.0.3.101

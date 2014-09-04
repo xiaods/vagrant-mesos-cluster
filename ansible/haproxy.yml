@@ -1,5 +1,5 @@
 ---
-- hosts: all
+- hosts: haproxy
   gather_facts: false
   sudo: yes
 
