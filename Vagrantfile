@@ -1,19 +1,10 @@
 require 'json'
 
 VAGRANTFILE_API_VERSION = "2"
-DEFAULT_CLUSTER = "mesos"
-
-def hosts_by_role(cluster, role)
-  servers = cluster.values.select { |v| v['role'] == role }
-  servers.each_with_index.map { |s,i| { "id" => i + 1, "host" => s["ip"] } }
-end
+DEFAULT_CLUSTER = "vagrant"
 
 base_dir = File.expand_path(File.dirname(__FILE__))
 cluster = JSON.parse(IO.read(File.join(base_dir, "clusters", ENV['CLUSTER'] || DEFAULT_CLUSTER, "cluster.json")))
-zk_servers = hosts_by_role(cluster, "zk").concat(hosts_by_role(cluster, "mesos_stack"))
-zk_uri = "zk://" + zk_servers.map{|x| x["host"] + ":2181"}.join(",")
-marathon_servers = hosts_by_role(cluster, "marathon")
-mesos_servers = hosts_by_role(cluster, "master").concat(hosts_by_role(cluster, "mesos_stack"))
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
@@ -41,71 +32,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       cfg.vm.provision :ansible do |ansible|
         ansible.verbose = "v"
 
-        if info["role"] == "zk" then
-          ansible.playbook = "ansible/zookeeper.yml"
-          ansible.extra_vars = {
-            zookeeper_myid: zk_servers.select{|x| x["host"] == info["ip"]}.first["id"],
-            zookeeper_servers: zk_servers
-          }
-        elsif info["role"] == "haproxy" then
-          ansible.playbook = "ansible/haproxy.yml"
-          ansible.extra_vars = {
-            mesos_service_discovery_marathon_ip: marathon_servers.first["host"],
-            mesos_service_discovery_local_host: info["ip"]
-          }
-        elsif info["role"] == "mesos_stack" then
-          ansible.playbook = "ansible/mesos_stack.yml"
-          ansible.extra_vars = {
-            mesos_ip: "#{info["ip"]}",
-            mesos_zk: "#{zk_uri}/mesos",
-            mesos_mode: "master",
-            mesos_options_master: {
-              cluster: "vagrant-mesos-cluster",
-              work_dir: "/var/run/mesos",
-              quorum: (mesos_servers.length.to_f/2).ceil
-            },
-            marathon_install_mode: "source",
-            marathon_zk: "#{zk_uri}/marathon",
-            marathon_runtime_params: "--event_subscriber http_callback",
-            zookeeper_myid: zk_servers.select{|x| x["host"] == info["ip"]}.first["id"],
-            zookeeper_servers: zk_servers
-          }
-        else
-          ansible.extra_vars = {
-            mesos_ip: "#{info["ip"]}",
-            mesos_zk: "#{zk_uri}/mesos"
-          }
-
-          case info["role"]
-          when "master"
-            ansible.playbook = "ansible/mesosphere.yml"
-            ansible.extra_vars.merge!({
-              mesos_mode: "master",
-              mesos_options_master: {
-                cluster: "vagrant-mesos-cluster",
-                work_dir: "/var/run/mesos",
-                quorum: (hosts_by_role(cluster, "master").length.to_f/2).ceil
-              }
-            })
-          when "slave"
-            ansible.playbook = "ansible/mesosphere.yml"
-            ansible.extra_vars.merge!({
-              mesos_mode: "slave",
-              mesos_options_slave: {
-                containerizers: "docker,mesos",
-                executor_registration_timeout: "5mins",
-              }
-            })
-          when "marathon"
-            ansible.playbook = "ansible/marathon.yml"
-            ansible.extra_vars.merge!({
-              marathon_install_mode: "source",
-              marathon_zk: "#{zk_uri}/marathon",
-              marathon_runtime_params: "--event_subscriber http_callback"
-            })
-          end
-        end
-
+        ansible.inventory_path = "ansible/vagrant"
+        ansible.playbook = "ansible/#{info["playbook"]}"
       end
 
     end

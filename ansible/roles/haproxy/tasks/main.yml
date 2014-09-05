@@ -1,6 +1,6 @@
 ---
 
-- name: Install the required packages 
+- name: Install the required packages
   apt: pkg={{item}} state=installed
   with_items:
     - git

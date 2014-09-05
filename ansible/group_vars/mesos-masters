@@ -1,0 +1,4 @@
+---
+mesos_mode: master
+marathon_install_mode: source
+marathon_runtime_params: --event_subscriber http_callback
