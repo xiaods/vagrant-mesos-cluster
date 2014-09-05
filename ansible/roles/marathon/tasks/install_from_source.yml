@@ -19,9 +19,9 @@
 - name: Clone Marathon github repository
   git: repo=https://github.com/mesosphere/marathon.git
        dest={{marathon_bin_folder}}
-       version={{marathon_from_source_version}}
+       version={{marathon_version}}
 
 - name: Build Marathon
-  command: sbt assembly
+  command: sbt assembly creates={{marathon_bin_folder}}/target
   args:
     chdir: "{{marathon_bin_folder}}"
