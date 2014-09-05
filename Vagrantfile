@@ -1,7 +1,7 @@
 require 'json'
 
 VAGRANTFILE_API_VERSION = "2"
-DEFAULT_CLUSTER = "mesos-vagrant"
+DEFAULT_CLUSTER = "vagrant"
 
 base_dir = File.expand_path(File.dirname(__FILE__))
 cluster = JSON.parse(IO.read(File.join(base_dir, "clusters", ENV['CLUSTER'] || DEFAULT_CLUSTER, "cluster.json")))
@@ -32,7 +32,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       cfg.vm.provision :ansible do |ansible|
         ansible.verbose = "v"
 
-        ansible.inventory_path = "./inventory/vagrant"
+        ansible.inventory_path = "ansible/vagrant"
         ansible.playbook = "ansible/#{info["playbook"]}"
       end
 
