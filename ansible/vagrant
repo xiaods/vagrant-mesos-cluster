@@ -1,0 +1,13 @@
+[mesos-masters]
+mesos-master1 ansible_ssh_host=10.0.10.11 mesos_ip=10.0.10.11 zookeeper_myid=1
+
+[haproxy]
+haproxy1 ansible_ssh_host=10.0.10.21 mesos_service_discovery_local_host=10.0.10.21
+
+[mesos-slaves]
+mesos-slave1 ansible_ssh_host=10.0.10.101 mesos_ip=10.0.10.101
+
+[vagrant:children]
+mesos-masters
+haproxy
+mesos-slaves
