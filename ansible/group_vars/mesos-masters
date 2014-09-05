@@ -1,4 +1,5 @@
 ---
 mesos_mode: master
 marathon_install_mode: source
+marathon_version: 3abaab6c3a83283713d8b3c9886cf2acd0b650db
 marathon_runtime_params: --event_subscriber http_callback
