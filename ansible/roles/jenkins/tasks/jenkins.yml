@@ -1,0 +1,13 @@
+---
+
+# Install Jenkins
+- name: Install Jenkins
+  sudo: yes
+  apt: pkg=jenkins state=latest update-cache=yes
+  register: jenkins_install
+
+# Install Jenkins cli
+- include: cli.yml
+
+# Install/update Jenkins plugins
+- include: plugins.yml

@@ -1,0 +1,9 @@
+---
+# Add Jenkins repository
+- include: repo.yml
+
+# Install dependencies
+- include: dependencies_deb.yml
+
+# Install jenkins
+- include: jenkins.yml tags=jenkins
