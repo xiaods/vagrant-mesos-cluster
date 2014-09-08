@@ -36,6 +36,15 @@
       "type": "virtualbox",
       "cpus": 1,
       "mem": 2048
+  },
+
+  "vnc" : {
+    "playbook": "remote-vnc.yml",
+    "ip": "10.0.10.2",
+    "config": {
+      "type": "virtualbox",
+      "cpus": 1,
+      "mem": 1024
     }
   }
 }

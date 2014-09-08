@@ -7,8 +7,13 @@ haproxy1 ansible_ssh_host=10.0.10.21 mesos_service_discovery_local_host=10.0.10.
 [mesos-slaves]
 mesos-slave1 ansible_ssh_host=10.0.10.101 mesos_ip=10.0.10.101
 
+<<<<<<< HEAD
 [jenkins]
 jenkins1 ansible_ssh_host=10.0.10.31 mesos_ip=10.0.10.31
+=======
+[remote-vnc]
+vnc ansible_ssh_host=10.0.10.2
+>>>>>>> Add vagrant vac box
 
 [vagrant:children]
 mesos-masters
