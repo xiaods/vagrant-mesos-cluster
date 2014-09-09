@@ -2,15 +2,13 @@
 
 found=false
 
-# check if lo hostname already defined
 while read line
 do
-  if [[ "$line" == "127.0.1.1"* ]]; then
+  if [[ "$line" == "127.0.1.1"* ]] && [[ "$line" == *`hostname`* ]]; then
     found=true
   fi
 done < /etc/hosts
 
-# if not, write to hosts
 if [ "$found" = false ]; then
-  echo "127.0.1.1 $(hostname)" >> /etc/hosts
+  echo 127.0.1.1 `hostname` >> /etc/hosts
 fi
