@@ -1,14 +1,5 @@
 #!/bin/bash
 
-found=false
-
-while read line
-do
-  if [[ "$line" == "127.0.1.1"* ]] && [[ "$line" == *`hostname`* ]]; then
-    found=true
-  fi
-done < /etc/hosts
-
-if [ "$found" = false ]; then
-  echo 127.0.1.1 `hostname` >> /etc/hosts
+if ! grep -e "^127\.0\.1\.1.*`hostname`.*" /etc/hosts > /dev/null ; then
+  echo "127.0.1.1 `hostname`" >> /etc/hosts
 fi
