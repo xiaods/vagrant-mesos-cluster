@@ -2,6 +2,7 @@
 
 mesos_service_discovery_version: "HEAD"
 mesos_service_discovery_log_file: "/var/log/mesos_service_discovery.log"
+mesos_service_discovery_bin_folder: "/opt/src/mesos_service_discovery/{{mesos_service_discovery_version}}"
 mesos_service_discovery_marathon_port: "8080"
 mesos_service_discovery_marathon_ip: "localhost"
 mesos_service_discovery_local_port: "8081"
