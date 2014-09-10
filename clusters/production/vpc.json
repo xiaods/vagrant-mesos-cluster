@@ -4,9 +4,24 @@
   "Description" : "Mesos VPC",
 
   "Parameters" : {
+    "KeyName": {
+      "Description" : "Name of an existing EC2 KeyPair to enable SSH access to the instance",
+      "Type": "String",
+      "MinLength": "1",
+      "MaxLength": "255",
+      "AllowedPattern" : "[\\x20-\\x7E]*",
+      "ConstraintDescription" : "can contain only ASCII characters."
+    },
+
     "VpcName": {
       "Description": "VPC Name",
       "Type": "String"
+    },
+
+    "InstanceType": {
+      "Description": "Jenkins instance type",
+      "Type": "String",
+      "Default": "m3.medium"
     }
   },
 
@@ -177,6 +192,17 @@
         ]
       }
     },
+
+    "PrivateRoute" : {
+      "Type" : "AWS::EC2::Route",
+      "DependsOn" : "NatInstance1Pub1",
+      "Properties" : {
+        "RouteTableId" : { "Ref" : "PrivateRouteTable" },
+        "DestinationCidrBlock" : "0.0.0.0/0",
+        "InstanceId" : { "Ref" : "NatInstance1Pub1" }
+      }
+    },
+
 
     "PrivateSubnet1RouteTableAssociation" : {
       "Type" : "AWS::EC2::SubnetRouteTableAssociation",
@@ -372,6 +398,42 @@
         "SubnetId" : { "Ref" : "PrivateSubnet3" },
         "NetworkAclId" : { "Ref" : "PrivateNetworkAcl" }
       }
+    },
+
+    "NatInstance1Pub1" : {
+      "Type" : "AWS::EC2::Instance",
+      "Properties" : {
+        "InstanceType" : { "Ref" : "InstanceType" },
+        "KeyName" : { "Ref" : "KeyName" },
+        "ImageId" : "ami-6e9e4b06",
+        "Monitoring" : true,
+        "SubnetId": { "Ref": "PublicSubnet1" },
+        "Tags": [
+           { "Key" : "Name", "Value": "NAT" }
+        ],
+        "SecurityGroupIds" : [
+          { "Ref": "NatGroup" }
+        ]
+      }
+    },
+
+    "NatEIP1Pub1" : {
+      "Type": "AWS::EC2::EIP",
+      "Properties": {
+        "InstanceId" : { "Ref" : "NatInstance1Pub1" },
+        "Domain" : "vpc"
+      }
+    },
+
+    "NatGroup" : {
+      "Type" : "AWS::EC2::SecurityGroup",
+      "Properties" : {
+        "GroupDescription" : "NAT security group",
+        "VpcId" : { "Ref" : "VPC" },
+        "SecurityGroupIngress" : [
+          { "IpProtocol" : "tcp", "FromPort" : "0", "ToPort" : "65535", "CidrIp" : "10.0.0.0/16" }
+        ]
+      }
     }
   },
 
@@ -403,6 +465,10 @@
     "PrivateSubnet3" : {
       "Description" : "SubnetId of the Private subnet 3",
       "Value" :  { "Ref" : "PrivateSubnet3" }
+    },
+    "NatEIP" : {
+      "Description" : "EIP for NAT",
+      "Value" :  { "Ref" : "NatEIP1Pub1" }
     }
   }
 }
