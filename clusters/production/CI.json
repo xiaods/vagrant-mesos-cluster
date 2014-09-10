@@ -1,0 +1,105 @@
+{
+  "AWSTemplateFormatVersion" : "2010-09-09",
+
+  "Description" : "Launch Mesos Masters in VPC",
+
+  "Parameters" : {
+    "KeyName": {
+      "Description" : "Name of an existing EC2 KeyPair to enable SSH access to the instance",
+      "Type": "String",
+      "MinLength": "1",
+      "MaxLength": "255",
+      "AllowedPattern" : "[\\x20-\\x7E]*",
+      "ConstraintDescription" : "can contain only ASCII characters."
+    },
+
+    "VpcId": {
+      "Description": "VPC ID",
+      "Type": "String"
+    },
+
+    "SubnetIdPub1": {
+      "Description": "Subnet public 1 (10.0.1.0/24) id",
+      "Type": "String"
+    },
+
+    "AnsibleInstanceType": {
+      "Description": "Mesos Master instance type",
+      "Type": "String",
+      "Default": "t2.medium"
+    }
+  },
+
+  "Mappings" : {
+    "RegionMap" : {
+      "us-east-1"      : { "AMI" : "ami-10389d78" }
+    }
+  },
+
+  "Resources" : {
+    "AnsibleInstance" : {
+      "Type" : "AWS::EC2::Instance",
+      "Properties" : {
+        "InstanceType" : { "Ref" : "AnsibleInstanceType" },
+        "KeyName" : { "Ref" : "KeyName" },
+        "ImageId" : { "Fn::FindInMap" : [ "RegionMap", { "Ref" : "AWS::Region" }, "AMI" ]},
+        "Monitoring" : true,
+        "UserData" : { "Fn::Base64" : { "Fn::Join" : [ "", [
+            "#!/bin/bash\n",
+
+            "export DEBIAN_FRONTEND=noninteractive\n",
+            "sudo apt-get install -y software-properties-common git\n",
+            "sudo apt-add-repository ppa:ansible/ansible\n",
+            "sudo apt-get update -y\n",
+            "sudo apt-get install -y ansible\n",
+
+            "git clone https://github.com/Woorank/vagrant-mesos-cluster.git /home/ubuntu/vagrant-mesos-cluster\n",
+            "chown ubuntu:ubuntu -R /home/ubuntu/vagrant-mesos-cluster\n",
+
+            "# disable known_hosts checking\n",
+            "sed -i 's/^#host_key_checking = False$/host_key_checking = False/g' /etc/ansible/ansible.cfg\n"
+        ] ] } },
+        "Tags": [
+           { "Key" : "Name", "Value": "Ansible Server" }
+        ],
+        "BlockDeviceMappings" : [
+          { "DeviceName" : "/dev/sda1", "Ebs" : { "VolumeSize" : "20", "VolumeType" : "gp2" } }
+        ],
+        "NetworkInterfaces" : [{
+          "GroupSet"                 : [{ "Ref" : "AnsibleGroup" }],
+          "PrivateIpAddress"         : "10.0.1.5",
+          "DeviceIndex"              : "0",
+          "DeleteOnTermination"      : "true",
+          "SubnetId"                 : { "Ref" : "SubnetIdPub1" }
+        }]
+      }
+    },
+
+    "AnsibleEIP" : {
+      "Type": "AWS::EC2::EIP",
+      "Properties": {
+        "InstanceId" : { "Ref" : "AnsibleInstance" },
+        "Domain" : "vpc"
+      }
+    },
+
+    "AnsibleGroup" : {
+      "Type" : "AWS::EC2::SecurityGroup",
+      "Properties" : {
+        "GroupDescription" : "ansible role security group",
+        "VpcId" : { "Ref" : "VpcId" },
+        "SecurityGroupIngress" : [
+          { "IpProtocol" : "tcp", "FromPort" : "22", "ToPort" : "22", "CidrIp" : "0.0.0.0/0" },
+          { "IpProtocol" : "tcp", "FromPort" : "80", "ToPort" : "80", "CidrIp" : "0.0.0.0/0" },
+          { "IpProtocol" : "tcp", "FromPort" : "443", "ToPort" : "443", "CidrIp" : "0.0.0.0/0" }
+        ]
+      }
+    }
+  },
+
+  "Outputs" : {
+    "AnsibleIP" : {
+      "Value" : { "Ref" : "AnsibleEIP" }
+    }
+  }
+}
