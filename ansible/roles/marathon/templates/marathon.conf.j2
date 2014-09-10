@@ -6,5 +6,5 @@ respawn
 env LIBPROCESS_IP={{mesos_ip}}
 
 script
-  exec {{marathon_bin_folder}}/bin/start --master {{mesos_masters}} --zk {{marathon_zk}} --ha --hostname {{mesos_ip}} {{marathon_runtime_params}} >> {{marathon_log_file}} 2>&1
+  exec {{marathon_bin_folder}}/bin/start --master {{mesos_masters}} --zk {{marathon_zk}} --hostname {{mesos_ip}} --event_subscriber http_callback {{marathon_runtime_params}} >> {{marathon_log_file}} 2>&1
 end script
