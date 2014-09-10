@@ -19,7 +19,7 @@
     },
 
     "InstanceType": {
-      "Description": "Jenkins instance type",
+      "Description": "Nat instance type",
       "Type": "String",
       "Default": "m3.medium"
     }
