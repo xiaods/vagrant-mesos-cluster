@@ -345,7 +345,7 @@
         "Protocol" : "6",
         "RuleAction" : "allow",
         "Egress" : "false",
-        "CidrBlock" : "10.0.0.0/24",
+        "CidrBlock" : "10.0.0.0/16",
         "PortRange" : { "From" : "0", "To" : "1024" }
       }
     },
