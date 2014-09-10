@@ -25,3 +25,7 @@
 
 - name: Upstart script
   template: src=vncserver.conf.j2 dest=/etc/init/vncserver.conf
+  notify: Restart vncserver
+
+- name: Start vncserver
+  service: name=vncserver state=started enabled=yes
