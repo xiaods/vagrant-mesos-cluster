@@ -408,6 +408,7 @@
         "ImageId" : "ami-6e9e4b06",
         "Monitoring" : true,
         "SubnetId": { "Ref": "PublicSubnet1" },
+        "SourceDestCheck": "false",
         "Tags": [
            { "Key" : "Name", "Value": "NAT" }
         ],
