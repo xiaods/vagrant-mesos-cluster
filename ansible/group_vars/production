@@ -13,3 +13,4 @@ zookeeper_servers:
   - { id: 1, host: 10.0.1.11 }
   - { id: 2, host: 10.0.2.11 }
   - { id: 3, host: 10.0.3.11 }
+marathon_runtime_params: --ha
