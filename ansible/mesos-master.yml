@@ -5,6 +5,6 @@
 
   roles:
     - common
-    - zookeeper
-    - mesosphere
-    - marathon
+    - { role: zookeeper, tags: [ 'zookeeper' ] }
+    - { role: mesosphere, tags: [ 'mesos' ] }
+    - { role: marathon, tags: [ 'marathon'] }
