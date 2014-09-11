@@ -19,17 +19,17 @@
     },
 
     "SubnetIdPriv1": {
-      "Description": "Subnet public 1 (10.0.10.0/24) id",
+      "Description": "Subnet private 1 (10.0.10.0/24) id",
       "Type": "String"
     },
 
     "SubnetIdPriv2": {
-      "Description": "Subnet public 2 (10.0.20.0/24) id",
+      "Description": "Subnet private 2 (10.0.20.0/24) id",
       "Type": "String"
     },
 
     "SubnetIdPriv3": {
-      "Description": "Subnet public 3 (10.0.30.0/24) id",
+      "Description": "Subnet private 3 (10.0.30.0/24) id",
       "Type": "String"
     },
 
