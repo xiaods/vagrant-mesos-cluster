@@ -18,25 +18,25 @@
       "Type": "String"
     },
 
-    "SubnetIdPriv1": {
-      "Description": "Subnet private 1 (10.0.10.0/24) id",
+    "SubnetIdPub1": {
+      "Description": "Subnet public 1 (10.0.1.0/24) id",
       "Type": "String"
     },
 
-    "SubnetIdPriv2": {
-      "Description": "Subnet private 2 (10.0.20.0/24) id",
+    "SubnetIdPub2": {
+      "Description": "Subnet public 2 (10.0.2.0/24) id",
       "Type": "String"
     },
 
-    "SubnetIdPriv3": {
-      "Description": "Subnet private 3 (10.0.30.0/24) id",
+    "SubnetIdPub3": {
+      "Description": "Subnet public 3 (10.0.3.0/24) id",
       "Type": "String"
     },
 
     "InstanceType": {
       "Description": "Mesos Master instance type",
       "Type": "String",
-      "Default": "m3.medium"
+      "Default": "r3.large"
     }
   },
 
@@ -47,7 +47,7 @@
   },
 
   "Resources" : {
-    "MesosMasterInstance1Priv1" : {
+    "MesosSlaveInstance1p1" : {
       "Type" : "AWS::EC2::Instance",
       "Properties" : {
         "InstanceType" : { "Ref" : "InstanceType" },
@@ -55,25 +55,25 @@
         "ImageId" : { "Fn::FindInMap" : [ "RegionMap", { "Ref" : "AWS::Region" }, "AMI" ]},
         "Monitoring" : true,
         "Tags": [
-          { "Key" : "Name", "Value": "Mesos Master 1" },
-          { "Key" : "Role", "Value" : "mesos-master" },
+          { "Key" : "Name", "Value": "Mesos Slave 1.1" },
+          { "Key" : "Role", "Value" : "mesos-slave" },
           { "Key" : "Group", "Value" : "production" }
         ],
         "BlockDeviceMappings" : [
           { "DeviceName" : "/dev/sda1", "Ebs" : { "VolumeSize" : "100", "VolumeType" : "gp2" } }
         ],
         "NetworkInterfaces" : [{
-          "GroupSet"                 : [{ "Ref" : "MesosMasterGroup" }],
-          "AssociatePublicIpAddress" : "false",
-          "PrivateIpAddress"         : "10.0.10.11",
+          "GroupSet"                 : [{ "Ref" : "MesosSlaveGroup" }],
+          "AssociatePublicIpAddress" : "true",
+          "PrivateIpAddress"         : "10.0.1.101",
           "DeviceIndex"              : "0",
           "DeleteOnTermination"      : "true",
-          "SubnetId"                 : { "Ref" : "SubnetIdPriv1" }
+          "SubnetId"                 : { "Ref" : "SubnetIdPub1" }
         }]
       }
     },
 
-    "MesosMasterInstance2Priv2" : {
+    "MesosSlaveInstance2p1" : {
       "Type" : "AWS::EC2::Instance",
       "Properties" : {
         "InstanceType" : { "Ref" : "InstanceType" },
@@ -81,25 +81,25 @@
         "ImageId" : { "Fn::FindInMap" : [ "RegionMap", { "Ref" : "AWS::Region" }, "AMI" ]},
         "Monitoring" : true,
         "Tags": [
-          { "Key" : "Name", "Value": "Mesos Master 2" },
-          { "Key" : "Role", "Value" : "mesos-master" },
+          { "Key" : "Name", "Value": "Mesos Slave 2.1" },
+          { "Key" : "Role", "Value" : "mesos-slave" },
           { "Key" : "Group", "Value" : "production" }
         ],
         "BlockDeviceMappings" : [
           { "DeviceName" : "/dev/sda1", "Ebs" : { "VolumeSize" : "100", "VolumeType" : "gp2" } }
         ],
         "NetworkInterfaces" : [{
-          "GroupSet"                 : [{ "Ref" : "MesosMasterGroup" }],
-          "AssociatePublicIpAddress" : "false",
-          "PrivateIpAddress"         : "10.0.20.11",
+          "GroupSet"                 : [{ "Ref" : "MesosSlaveGroup" }],
+          "AssociatePublicIpAddress" : "true",
+          "PrivateIpAddress"         : "10.0.2.101",
           "DeviceIndex"              : "0",
           "DeleteOnTermination"      : "true",
-          "SubnetId"                 : { "Ref" : "SubnetIdPriv2" }
+          "SubnetId"                 : { "Ref" : "SubnetIdPub2" }
         }]
       }
     },
 
-    "MesosMasterInstance3Priv3" : {
+    "MesosSlaveInstance3p1" : {
       "Type" : "AWS::EC2::Instance",
       "Properties" : {
         "InstanceType" : { "Ref" : "InstanceType" },
@@ -107,28 +107,28 @@
         "ImageId" : { "Fn::FindInMap" : [ "RegionMap", { "Ref" : "AWS::Region" }, "AMI" ]},
         "Monitoring" : true,
         "Tags": [
-          { "Key" : "Name", "Value": "Mesos Master 3" },
-          { "Key" : "Role", "Value" : "mesos-master" },
+          { "Key" : "Name", "Value": "Mesos Slave 3.1" },
+          { "Key" : "Role", "Value" : "mesos-slave" },
           { "Key" : "Group", "Value" : "production" }
         ],
         "BlockDeviceMappings" : [
           { "DeviceName" : "/dev/sda1", "Ebs" : { "VolumeSize" : "100", "VolumeType" : "gp2" } }
         ],
         "NetworkInterfaces" : [{
-          "GroupSet"                 : [{ "Ref" : "MesosMasterGroup" }],
-          "AssociatePublicIpAddress" : "false",
-          "PrivateIpAddress"         : "10.0.30.11",
+          "GroupSet"                 : [{ "Ref" : "MesosSlaveGroup" }],
+          "AssociatePublicIpAddress" : "true",
+          "PrivateIpAddress"         : "10.0.3.101",
           "DeviceIndex"              : "0",
           "DeleteOnTermination"      : "true",
-          "SubnetId"                 : { "Ref" : "SubnetIdPriv3" }
+          "SubnetId"                 : { "Ref" : "SubnetIdPub3" }
         }]
       }
     },
 
-    "MesosMasterGroup" : {
+    "MesosSlaveGroup" : {
       "Type" : "AWS::EC2::SecurityGroup",
       "Properties" : {
-        "GroupDescription" : "mesos master role security group",
+        "GroupDescription" : "mesos slave role security group",
         "VpcId" : { "Ref" : "VpcId" },
         "SecurityGroupIngress" : [
           { "IpProtocol" : "tcp", "FromPort" : "22", "ToPort" : "22", "CidrIp" : "10.0.0.0/16" },
