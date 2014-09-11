@@ -1,7 +1,7 @@
 [mesos-masters]
-10.0.10.11 mesos_ip=10.0.1.11 zookeeper_myid=1
-10.0.20.11 mesos_ip=10.0.2.11 zookeeper_myid=2
-10.0.30.11 mesos_ip=10.0.3.11 zookeeper_myid=3
+10.0.10.11 mesos_ip=10.0.10.11 zookeeper_myid=1
+10.0.20.11 mesos_ip=10.0.20.11 zookeeper_myid=2
+10.0.30.11 mesos_ip=10.0.30.11 zookeeper_myid=3
 
 [haproxy]
 10.0.1.21 mesos_service_discovery_local_host=10.0.1.21
