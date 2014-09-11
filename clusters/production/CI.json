@@ -27,6 +27,12 @@
       "Description": "Mesos Master instance type",
       "Type": "String",
       "Default": "t2.medium"
+    },
+
+    "JenkinsInstanceType": {
+      "Description": "Jenkins instance type",
+      "Type": "String",
+      "Default": "t2.small"
     }
   },
 
@@ -93,6 +99,58 @@
           { "IpProtocol" : "tcp", "FromPort" : "80", "ToPort" : "80", "CidrIp" : "0.0.0.0/0" },
           { "IpProtocol" : "tcp", "FromPort" : "443", "ToPort" : "443", "CidrIp" : "0.0.0.0/0" }
         ]
+      }
+    },
+
+    "JenkinsInstance" : {
+      "Type" : "AWS::EC2::Instance",
+      "Properties" : {
+        "InstanceType" : { "Ref" : "JenkinsInstanceType" },
+        "KeyName" : { "Ref" : "KeyName" },
+        "ImageId" : { "Fn::FindInMap" : [ "RegionMap", { "Ref" : "AWS::Region" }, "AMI" ]},
+        "Monitoring" : true,
+        "UserData" : { "Fn::Base64" : { "Fn::Join" : [ "", [
+            "#!/bin/bash\n",
+            "mkfs -t ext4 /dev/sdb\n",
+            "mkdir /data\n",
+            "mount /dev/sdb /data\n",
+            "echo \"/dev/sdb       /data   ext4    defaults,nofail        0       2\" >> /etc/fstab\n"
+        ] ] } },
+        "Tags": [
+          { "Key" : "Name", "Value": "Jenkins" },
+          { "Key" : "Role", "Value" : "jenkins" }
+        ],
+        "BlockDeviceMappings" : [
+          { "DeviceName" : "/dev/sda1", "Ebs" : { "VolumeSize" : "10", "VolumeType" : "gp2" } },
+          { "DeviceName" : "/dev/sdb", "Ebs" : { "VolumeSize" : "10", "VolumeType" : "gp2" } }
+        ],
+        "NetworkInterfaces" : [{
+          "GroupSet"                 : [{ "Ref" : "JenkinsGroup" }],
+          "PrivateIpAddress"         : "10.0.1.6",
+          "DeviceIndex"              : "0",
+          "DeleteOnTermination"      : "true",
+          "SubnetId"                 : { "Ref" : "SubnetIdPub1" }
+        }]
+      }
+    },
+
+    "JenkinsGroup": {
+      "Type" : "AWS::EC2::SecurityGroup",
+      "Properties" : {
+        "GroupDescription" : "Jenkins security group",
+        "VpcId" : { "Ref" : "VpcId" },
+        "SecurityGroupIngress" : [
+          { "IpProtocol" : "tcp", "FromPort" : "22", "ToPort" : "22", "CidrIp" : "10.0.0.0/16" },
+          { "IpProtocol" : "tcp", "FromPort" : "8080", "ToPort" : "8080", "CidrIp" : "0.0.0.0/0" }
+        ]
+      }
+    },
+
+    "JenkinsEIP" : {
+      "Type": "AWS::EC2::EIP",
+      "Properties": {
+        "InstanceId" : { "Ref" : "JenkinsInstance" },
+        "Domain" : "vpc"
       }
     }
   },
