@@ -73,6 +73,58 @@
       }
     },
 
+    "MesosMasterInstance2Priv2" : {
+      "Type" : "AWS::EC2::Instance",
+      "Properties" : {
+        "InstanceType" : { "Ref" : "InstanceType" },
+        "KeyName" : { "Ref" : "KeyName" },
+        "ImageId" : { "Fn::FindInMap" : [ "RegionMap", { "Ref" : "AWS::Region" }, "AMI" ]},
+        "Monitoring" : true,
+        "Tags": [
+          { "Key" : "Name", "Value": "Mesos Master 2" },
+          { "Key" : "Role", "Value" : "mesos-master" },
+          { "Key" : "Group", "Value" : "production" }
+        ],
+        "BlockDeviceMappings" : [
+          { "DeviceName" : "/dev/sda1", "Ebs" : { "VolumeSize" : "100", "VolumeType" : "gp2" } }
+        ],
+        "NetworkInterfaces" : [{
+          "GroupSet"                 : [{ "Ref" : "MesosMasterGroup" }],
+          "AssociatePublicIpAddress" : "false",
+          "PrivateIpAddress"         : "10.0.20.11",
+          "DeviceIndex"              : "0",
+          "DeleteOnTermination"      : "true",
+          "SubnetId"                 : { "Ref" : "SubnetIdPriv2" }
+        }]
+      }
+    },
+
+    "MesosMasterInstance3Priv3" : {
+      "Type" : "AWS::EC2::Instance",
+      "Properties" : {
+        "InstanceType" : { "Ref" : "InstanceType" },
+        "KeyName" : { "Ref" : "KeyName" },
+        "ImageId" : { "Fn::FindInMap" : [ "RegionMap", { "Ref" : "AWS::Region" }, "AMI" ]},
+        "Monitoring" : true,
+        "Tags": [
+          { "Key" : "Name", "Value": "Mesos Master 3" },
+          { "Key" : "Role", "Value" : "mesos-master" },
+          { "Key" : "Group", "Value" : "production" }
+        ],
+        "BlockDeviceMappings" : [
+          { "DeviceName" : "/dev/sda1", "Ebs" : { "VolumeSize" : "100", "VolumeType" : "gp2" } }
+        ],
+        "NetworkInterfaces" : [{
+          "GroupSet"                 : [{ "Ref" : "MesosMasterGroup" }],
+          "AssociatePublicIpAddress" : "false",
+          "PrivateIpAddress"         : "10.0.30.11",
+          "DeviceIndex"              : "0",
+          "DeleteOnTermination"      : "true",
+          "SubnetId"                 : { "Ref" : "SubnetIdPriv3" }
+        }]
+      }
+    },
+
     "MesosMasterGroup" : {
       "Type" : "AWS::EC2::SecurityGroup",
       "Properties" : {
