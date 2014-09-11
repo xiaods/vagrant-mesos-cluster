@@ -111,10 +111,10 @@
         "Monitoring" : true,
         "UserData" : { "Fn::Base64" : { "Fn::Join" : [ "", [
             "#!/bin/bash\n",
-            "mkfs -t ext4 /dev/sdb\n",
+            "mkfs -t ext4 /dev/xvdb\n",
             "mkdir /data\n",
-            "mount /dev/sdb /data\n",
-            "echo \"/dev/sdb       /data   ext4    defaults,nofail        0       2\" >> /etc/fstab\n"
+            "mount /dev/xvdb /data\n",
+            "echo \"/dev/xvdb       /data   ext4    defaults,nofail        0       2\" >> /etc/fstab\n"
         ] ] } },
         "Tags": [
           { "Key" : "Name", "Value": "Jenkins" },
