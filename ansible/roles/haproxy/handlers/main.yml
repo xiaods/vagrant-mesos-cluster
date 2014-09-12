@@ -1,6 +1,3 @@
 ---
-- name: Restart mesos_service_discovery
-  service: name=mesos_service_discovery state=restarted enabled=yes
-
 - name: Restart HAProxy
   service: name=haproxy state=restarted enabled=yes
