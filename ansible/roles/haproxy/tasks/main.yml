@@ -8,7 +8,7 @@
     - golang
 
 - name: Enable HAProxy
-  template: src=haproxy_enable.j2 dest=/etc/default/haproxytest
+  template: src=haproxy_enable.j2 dest=/etc/default/haproxy
   notify: Restart HAProxy
 
 - name: Create mesos_service_discovery binary directory
