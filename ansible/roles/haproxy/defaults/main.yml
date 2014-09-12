@@ -1,6 +1,6 @@
 ---
 
-mesos_service_discovery_version: "5251fe7ec94369d3e0723fbdff19770761a900c9"
+mesos_service_discovery_version: "a014e78fe28af11c96ad31dd38905f4584db62f6"
 mesos_service_discovery_log_file: "/var/log/mesos_service_discovery.log"
 mesos_service_discovery_bin_folder: "/opt/src/mesos_service_discovery/{{mesos_service_discovery_version}}"
 mesos_service_discovery_marathon_port: "8080"
