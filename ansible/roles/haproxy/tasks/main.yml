@@ -19,6 +19,10 @@
        dest={{mesos_service_discovery_bin_folder}}
        version={{mesos_service_discovery_version}}
 
+- name: Install HAProxy configuration template
+  copy: src=../files/haproxy.cfg.tpl dest=/etc/haproxy/haproxy.cfg.tpl 
+  notify: Restart mesos_service_discovery
+
 - name: Build mesos_service_discovery binary
   command: ./build.sh creates={{mesos_service_discovery_bin_folder}}/bin/mesos_service_discovery
   notify: Restart mesos_service_discovery
