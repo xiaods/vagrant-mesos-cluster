@@ -1,6 +1,5 @@
 ---
-# haproxy
-mesos_service_discovery_marathon_ip: 10.0.10.11
+hadiscovery_marathon_ip: 10.0.10.11
 
 # mesos-master
 mesos_zk: "zk://10.0.10.11:2181/mesos"

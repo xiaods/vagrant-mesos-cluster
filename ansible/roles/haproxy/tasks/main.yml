@@ -1,34 +1,7 @@
 ---
-
 - name: Install the required packages
-  apt: pkg={{item}} state=installed
-  with_items:
-    - git
-    - haproxy
-    - golang
+  apt: pkg=haproxy state=installed
 
 - name: Enable HAProxy
   template: src=haproxy_enable.j2 dest=/etc/default/haproxy
   notify: Restart HAProxy
-
-- name: Create mesos_service_discovery binary directory
-  file: state=directory path={{mesos_service_discovery_bin_folder}}
-
-- name: Clone mesos_service_discovery repo
-  git: repo=https://github.com/opencredo/mesos_service_discovery
-       dest={{mesos_service_discovery_bin_folder}}
-       version={{mesos_service_discovery_version}}
-
-- name: Install HAProxy configuration template
-  copy: src=../files/haproxy.cfg.tpl dest=/etc/haproxy/haproxy.cfg.tpl 
-  notify: Restart mesos_service_discovery
-
-- name: Build mesos_service_discovery binary
-  command: ./build.sh creates={{mesos_service_discovery_bin_folder}}/bin/mesos_service_discovery
-  notify: Restart mesos_service_discovery
-  args:
-    chdir: "{{mesos_service_discovery_bin_folder}}"
-
-- name: mesos_service_discovery upstart script
-  template: src=mesos_service_discovery.conf.j2 dest=/etc/init/mesos_service_discovery.conf
-  notify: Restart mesos_service_discovery

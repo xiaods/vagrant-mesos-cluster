@@ -1,0 +1,8 @@
+---
+hadiscovery_version: "5251fe7ec94369d3e0723fbdff19770761a900c9"
+hadiscovery_log_file: "/var/log/hadiscovery.log"
+hadiscovery_bin_folder: "/opt/src/hadiscovery/{{hadiscovery_version}}"
+hadiscovery_marathon_port: "8080"
+hadiscovery_marathon_ip: "localhost"
+hadiscovery_local_port: "8081"
+hadiscovery_local_host: "localhost"

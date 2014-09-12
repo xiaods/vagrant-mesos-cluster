@@ -5,4 +5,4 @@
 
   roles:
     - common
-    - { role: haproxy, tags: [ 'haproxy' ] }
+    - { role: hadiscovery, tags: [ 'hadiscovery' ] }
