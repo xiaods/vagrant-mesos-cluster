@@ -1,7 +1,7 @@
 {
   "AWSTemplateFormatVersion" : "2010-09-09",
 
-  "Description" : "Launch Mesos Slaves in VPC",
+  "Description" : "Launch HAProxy in VPC",
 
   "Parameters" : {
     "KeyName": {
@@ -34,9 +34,9 @@
     },
 
     "InstanceType": {
-      "Description": "Mesos Master instance type",
+      "Description": "HAProxy instance type",
       "Type": "String",
-      "Default": "r3.large"
+      "Default": "c3.xlarge"
     }
   },
 
@@ -47,7 +47,7 @@
   },
 
   "Resources" : {
-    "MesosSlaveInstance1p1" : {
+    "HAProxyInstance1" : {
       "Type" : "AWS::EC2::Instance",
       "Properties" : {
         "InstanceType" : { "Ref" : "InstanceType" },
@@ -55,17 +55,16 @@
         "ImageId" : { "Fn::FindInMap" : [ "RegionMap", { "Ref" : "AWS::Region" }, "AMI" ]},
         "Monitoring" : true,
         "Tags": [
-          { "Key" : "Name", "Value": "Mesos Slave 1.1" },
-          { "Key" : "Role", "Value" : "mesos-slave" },
+          { "Key" : "Name", "Value": "HAProxy 1" },
+          { "Key" : "Role", "Value" : "haproxy" },
           { "Key" : "Group", "Value" : "production" }
         ],
         "BlockDeviceMappings" : [
-          { "DeviceName" : "/dev/sda1", "Ebs" : { "VolumeSize" : "100", "VolumeType" : "gp2" } }
+          { "DeviceName" : "/dev/sda1", "Ebs" : { "VolumeSize" : "20", "VolumeType" : "gp2" } }
         ],
         "NetworkInterfaces" : [{
-          "GroupSet"                 : [{ "Ref" : "MesosSlaveGroup" }],
-          "AssociatePublicIpAddress" : "true",
-          "PrivateIpAddress"         : "10.0.1.101",
+          "GroupSet"                 : [{ "Ref" : "HAProxySlaveGroup" }],
+          "PrivateIpAddress"         : "10.0.1.21",
           "DeviceIndex"              : "0",
           "DeleteOnTermination"      : "true",
           "SubnetId"                 : { "Ref" : "SubnetIdPub1" }
@@ -73,7 +72,15 @@
       }
     },
 
-    "MesosSlaveInstance2p1" : {
+    "HAProxyEIP1" : {
+      "Type": "AWS::EC2::EIP",
+      "Properties": {
+        "InstanceId" : { "Ref" : "HAProxyInstance1" },
+        "Domain" : "vpc"
+      }
+    },
+
+    "HAProxyInstance2" : {
       "Type" : "AWS::EC2::Instance",
       "Properties" : {
         "InstanceType" : { "Ref" : "InstanceType" },
@@ -81,17 +88,16 @@
         "ImageId" : { "Fn::FindInMap" : [ "RegionMap", { "Ref" : "AWS::Region" }, "AMI" ]},
         "Monitoring" : true,
         "Tags": [
-          { "Key" : "Name", "Value": "Mesos Slave 2.1" },
-          { "Key" : "Role", "Value" : "mesos-slave" },
+          { "Key" : "Name", "Value": "HAProxy 2" },
+          { "Key" : "Role", "Value" : "haproxy" },
           { "Key" : "Group", "Value" : "production" }
         ],
         "BlockDeviceMappings" : [
-          { "DeviceName" : "/dev/sda1", "Ebs" : { "VolumeSize" : "100", "VolumeType" : "gp2" } }
+          { "DeviceName" : "/dev/sda1", "Ebs" : { "VolumeSize" : "20", "VolumeType" : "gp2" } }
         ],
         "NetworkInterfaces" : [{
-          "GroupSet"                 : [{ "Ref" : "MesosSlaveGroup" }],
-          "AssociatePublicIpAddress" : "true",
-          "PrivateIpAddress"         : "10.0.2.101",
+          "GroupSet"                 : [{ "Ref" : "HAProxySlaveGroup" }],
+          "PrivateIpAddress"         : "10.0.2.21",
           "DeviceIndex"              : "0",
           "DeleteOnTermination"      : "true",
           "SubnetId"                 : { "Ref" : "SubnetIdPub2" }
@@ -99,7 +105,15 @@
       }
     },
 
-    "MesosSlaveInstance3p1" : {
+    "HAProxyEIP2" : {
+      "Type": "AWS::EC2::EIP",
+      "Properties": {
+        "InstanceId" : { "Ref" : "HAProxyInstance2" },
+        "Domain" : "vpc"
+      }
+    },
+
+    "HAProxyInstance3" : {
       "Type" : "AWS::EC2::Instance",
       "Properties" : {
         "InstanceType" : { "Ref" : "InstanceType" },
@@ -107,17 +121,16 @@
         "ImageId" : { "Fn::FindInMap" : [ "RegionMap", { "Ref" : "AWS::Region" }, "AMI" ]},
         "Monitoring" : true,
         "Tags": [
-          { "Key" : "Name", "Value": "Mesos Slave 3.1" },
-          { "Key" : "Role", "Value" : "mesos-slave" },
+          { "Key" : "Name", "Value": "HAProxy 3" },
+          { "Key" : "Role", "Value" : "haproxy" },
           { "Key" : "Group", "Value" : "production" }
         ],
         "BlockDeviceMappings" : [
-          { "DeviceName" : "/dev/sda1", "Ebs" : { "VolumeSize" : "100", "VolumeType" : "gp2" } }
+          { "DeviceName" : "/dev/sda1", "Ebs" : { "VolumeSize" : "20", "VolumeType" : "gp2" } }
         ],
         "NetworkInterfaces" : [{
-          "GroupSet"                 : [{ "Ref" : "MesosSlaveGroup" }],
-          "AssociatePublicIpAddress" : "true",
-          "PrivateIpAddress"         : "10.0.3.101",
+          "GroupSet"                 : [{ "Ref" : "HAProxySlaveGroup" }],
+          "PrivateIpAddress"         : "10.0.3.21",
           "DeviceIndex"              : "0",
           "DeleteOnTermination"      : "true",
           "SubnetId"                 : { "Ref" : "SubnetIdPub3" }
@@ -125,13 +138,24 @@
       }
     },
 
-    "MesosSlaveGroup" : {
+    "HAProxyEIP3" : {
+      "Type": "AWS::EC2::EIP",
+      "Properties": {
+        "InstanceId" : { "Ref" : "HAProxyInstance3" },
+        "Domain" : "vpc"
+      }
+    },
+
+    "HAProxySlaveGroup" : {
       "Type" : "AWS::EC2::SecurityGroup",
       "Properties" : {
-        "GroupDescription" : "mesos slave role security group",
+        "GroupDescription" : "haproxy role security group",
         "VpcId" : { "Ref" : "VpcId" },
         "SecurityGroupIngress" : [
           { "IpProtocol" : "tcp", "FromPort" : "22", "ToPort" : "22", "CidrIp" : "10.0.0.0/16" },
+          { "IpProtocol" : "tcp", "FromPort" : "80", "ToPort" : "80", "CidrIp" : "0.0.0.0/0" },
+          { "IpProtocol" : "tcp", "FromPort" : "443", "ToPort" : "443", "CidrIp" : "0.0.0.0/0" },
+          { "IpProtocol" : "tcp", "FromPort" : "3000", "ToPort" : "3000", "CidrIp" : "0.0.0.0/0" },
           { "IpProtocol" : "tcp", "FromPort" : "1024", "ToPort" : "65535", "CidrIp" : "10.0.0.0/16" }
         ]
       }
