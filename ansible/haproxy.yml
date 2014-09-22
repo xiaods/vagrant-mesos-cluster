@@ -1,8 +1,0 @@
----
-- hosts: haproxy
-  gather_facts: false
-  sudo: yes
-
-  roles:
-    - common
-    - { role: hadiscovery, tags: [ 'hadiscovery' ] }
