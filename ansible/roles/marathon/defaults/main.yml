@@ -1,5 +1,6 @@
 ---
 marathon_install_mode: "bin" # 'bin' or 'source'
+marathon_run_mode: "server" # 'server' or 'bridge'
 
 marathon_version: "marathon-0.6.0"
 marathon_file_name: "{{marathon_version}}.tgz"
