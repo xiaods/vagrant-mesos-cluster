@@ -8,6 +8,10 @@
 10.0.2.101 mesos_ip=10.0.2.101
 10.0.3.101 mesos_ip=10.0.3.101
 
+[haproxy]
+10.0.1.21
+10.0.1.21
+
 [remote-vnc]
 10.0.1.5
 
@@ -17,4 +21,5 @@
 [production:children]
 mesos-masters
 mesos-slaves
+haproxy
 remote-vnc
