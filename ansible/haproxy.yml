@@ -1,0 +1,7 @@
+---
+- hosts: haproxy
+  sudo: yes
+
+  roles:
+    - common
+    - { role: haproxy, tags: [ 'haproxy' ] }

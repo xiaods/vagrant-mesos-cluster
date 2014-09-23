@@ -19,6 +19,16 @@
     }
   },
 
+  "haproxy1" : {
+    "playbook": "haproxy.yml",
+    "ip": "10.0.10.21",
+    "config": {
+      "type": "virtualbox",
+      "cpus": 1,
+      "mem": 512
+    }
+  },
+
   "jenkins": {
     "playbook": "jenkins.yml",
     "ip": "10.0.10.31",
