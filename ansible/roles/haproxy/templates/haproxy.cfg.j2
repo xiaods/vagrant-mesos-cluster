@@ -54,6 +54,6 @@ listen shotgun
   mode tcp
   option tcplog
   balance leastconn
-{% for name in groups['mesos-slaves'] %}
+{% for name in haproxy_service_backends %}
   server {{name}} {{ hostvars[name]['ansible_ssh_host']|default(name) }}:3000 check inter 10s rise 3 fall 2
 {% endfor %}
