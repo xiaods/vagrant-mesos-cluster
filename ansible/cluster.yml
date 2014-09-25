@@ -1,0 +1,39 @@
+---
+- hosts: all
+  roles:
+    - common
+
+# Mesos masters
+- hosts: mesos-masters
+  gather_facts: false
+  sudo: yes
+
+  roles:
+    - { role: zookeeper, tags: [ 'zookeeper' ] }
+    - { role: mesosphere, tags: [ 'mesos' ] }
+    - { role: marathon, tags: [ 'marathon'] }
+
+# Mesos slaves
+- hosts: mesos-slaves
+  gather_facts: false
+  sudo: yes
+
+  roles:
+    - { role: mesosphere, tags: [ 'mesos' ] }
+    - { role: marathon, tags: [ 'marathon'], marathon_run_mode: bridge }
+
+# HAproxy
+- hosts: haproxy
+  gather_facts: false
+  sudo: yes
+
+  roles:
+    - { role: haproxy, tags: [ 'haproxy' ] }
+
+# Jenkins
+- hosts: jenkins
+  gather_facts: false
+  sudo: yes
+
+  roles:
+    - jenkins

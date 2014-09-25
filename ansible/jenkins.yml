@@ -1,8 +1,0 @@
----
-- hosts: jenkins
-  gather_facts: false
-  sudo: yes
-
-  roles:
-    - common
-    - jenkins
