@@ -32,7 +32,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         ansible.verbose = "v"
 
         ansible.inventory_path = "ansible/vagrant"
-        ansible.playbook = "ansible/#{info["playbook"]}"
+        ansible.playbook = "ansible/cluster.yml"
       end
 
     end
