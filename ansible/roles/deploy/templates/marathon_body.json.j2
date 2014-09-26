@@ -1,0 +1,37 @@
+{
+  "id": "{{app_name}}_{{deploy_env}}",
+  "container": {
+    "docker": {
+        "image": "{{docker_image}}"
+    },
+    "type": "DOCKER",
+    "volumes": [
+      {
+        "containerPath": "/var/log/supervisor",
+        "hostPath": "/var/log",
+        "mode": "RW"
+      }
+    ]
+  },
+  "ports": [ {{ port|replace("xx", "10" if deploy_env == "prod" else "12") }} ],
+  "cpus": {{ config[deploy_env]['cpus'] }},
+  "mem": {{ config[deploy_env]['mem'] }},
+  "instances": {{ config[deploy_env]['instances'] }},
+  "env": {
+{% set envs = config[deploy_env]['env_vars'] %}
+{% for k in envs|sort %}
+    "{{ k }}": "{{ envs[k] }}"{{ "," if not loop.last else " " }}
+{% endfor %}
+  },
+  "healthChecks": [
+    {
+      "protocol": "HTTP",
+      "path": "/healthcheck",
+      "gracePeriodSeconds": 3,
+      "intervalSeconds": 10,
+      "portIndex": 0,
+      "timeoutSeconds": 10,
+      "maxConsecutiveFailures": 3
+    }
+  ]
+}

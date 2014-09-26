@@ -1,0 +1,22 @@
+---
+- hosts: 127.0.0.1
+  connection: local
+  gather_facts: false
+
+  # vars_prompt:
+  #   - name: "deploy_env"
+  #     prompt: "What environment would you like to deploy? [prod/test]"
+  #   - name: "deploy_app"
+  #     prompt: "What application?"
+
+  vars:
+    - deploy_env: prod
+
+  pre_tasks:
+    - debug: var={{ config[deploy_env] }}
+    - name: Check environment
+      fail: msg="Unexisting environment"
+      when: deploy_env != "prod"
+
+  roles:
+   - deploy
