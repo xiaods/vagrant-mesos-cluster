@@ -18,9 +18,6 @@
 [remote-vnc]
 10.0.1.5
 
-[jenkins]
-10.0.1.6
-
 [production:children]
 mesos-masters
 mesos-slaves

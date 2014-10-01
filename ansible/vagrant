@@ -10,9 +10,6 @@ mesos-slave1 ansible_ssh_host=10.0.10.101 mesos_ip=10.0.10.101
 [haproxy]
 haproxy1 ansible_ssh_host=10.0.10.21
 
-[jenkins]
-jenkins1 ansible_ssh_host=10.0.10.31 mesos_ip=10.0.10.31
-
 [vagrant:children]
 mesos-masters
 mesos-slaves
