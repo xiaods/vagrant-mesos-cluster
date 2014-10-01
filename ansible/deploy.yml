@@ -1,22 +1,30 @@
 ---
+- hosts: mesos-slaves
+  sudo: yes
+  gather_facts: false
+
+  tasks:
+  - name: Copy dockercfg to slaves
+    copy: src=~/.dockercfg dest=/var/marathon/.dockercfg force=yes
+
 - hosts: 127.0.0.1
   connection: local
   gather_facts: false
 
-  # vars_prompt:
-  #   - name: "deploy_env"
-  #     prompt: "What environment would you like to deploy? [prod/test]"
-  #   - name: "deploy_app"
-  #     prompt: "What application?"
+  vars_prompt:
+    - name: "deploy_env"
+      prompt: "What environment would you like to deploy? [prod/test]"
+    - name: "deploy_version"
+      prompt: "What application version?"
 
   vars:
-    - deploy_env: prod
+  - deploy_dockercfg_path: /var/marathon/.dockercfg
+  - deploy_marathon_host: "{{ hostvars[groups['mesos-masters'][0]]['ansible_ssh_host']|default(groups['mesos-masters'][0]) }}"
 
   pre_tasks:
-    - debug: var={{ config[deploy_env] }}
-    - name: Check environment
-      fail: msg="Unexisting environment"
-      when: deploy_env != "prod"
+  - name: Check environment
+    fail: msg="Unexisting environment"
+    when: deploy_env != "prod" and deploy_env != "test"
 
   roles:
-   - deploy
+  - deploy

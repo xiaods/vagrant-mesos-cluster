@@ -1,3 +1,18 @@
 ---
-- name: Template
-  template: src=marathon_body.json.j2 dest=/tmp/test
+- name: Housekeeping on temp files
+  file: path=/tmp/deploy.json.* state=absent
+
+- name: Create temporary file
+  command: mktemp /tmp/deploy.json.XXXXXXXXXX
+  register: deploy_tmp_file
+
+- name: Build marathon app config
+  template: src=marathon_body.json.j2 dest={{ deploy_tmp_file.stdout }}
+
+- name: Deploy application
+  command: "curl -i -X POST -H 'Content-Type: application/json' http://{{ deploy_marathon_host }}:8080/v2/apps -d@{{ deploy_tmp_file.stdout }}"
+  register: deploy_curl_output
+  failed_when: "'HTTP/1.1 201' not in deploy_curl_output.stdout_lines[0]"
+
+- name: Remove temp file
+  file: path={{ deploy_tmp_file.stdout }} state=absent
