@@ -3,7 +3,7 @@
   template: src=mesos-master.conf.j2 dest=/etc/init/mesos-master.conf
 
 - name: Set mesos master options
-  shell: echo {{item.value}} | dd of=/etc/mesos-master/{{item.key}}
+  template: src=etc.mesos.j2 dest=/etc/mesos-master/{{item.key}}
   with_dict: mesos_options_master | default({}) # with_dict needs explicit default
   notify: Restart mesos-master
 

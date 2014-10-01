@@ -10,7 +10,7 @@
 
   roles:
     - { role: zookeeper, tags: [ 'zookeeper' ] }
-    - { role: mesosphere, tags: [ 'mesos' ] }
+    - { role: mesosphere, tags: [ 'mesos' ], mesos_mode: master }
     - { role: marathon, tags: [ 'marathon'] }
 
 # Mesos slaves
@@ -18,14 +18,22 @@
   gather_facts: false
   sudo: yes
 
+  vars:
+    - mesos_options_slave:
+        containerizers: "docker,mesos"
+        executor_registration_timeout: 5mins
+
   roles:
-    - { role: mesosphere, tags: [ 'mesos' ] }
+    - { role: mesosphere, tags: [ 'mesos' ], mesos_mode: slave }
     - { role: marathon, tags: [ 'marathon'], marathon_run_mode: bridge }
 
 # HAproxy
 - hosts: haproxy
   gather_facts: false
   sudo: yes
+
+  vars:
+    - haproxy_service_backends: "{{ groups['mesos-slaves'] }}"
 
   roles:
     - { role: haproxy, tags: [ 'haproxy' ] }

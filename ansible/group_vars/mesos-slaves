@@ -1,5 +1,0 @@
----
-mesos_mode: slave
-mesos_options_slave:
-  containerizers: docker,mesos
-  executor_registration_timeout: 5mins

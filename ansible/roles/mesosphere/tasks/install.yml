@@ -12,6 +12,7 @@
 - name: Check installed mesos version
   shell: mesos-master --version | cut -c 7-
   register: mesos_installed_version
+  changed_when: False
   ignore_errors: True
 
 - name: Install Mesos Debian Package
@@ -29,4 +30,6 @@
   template: src=mesos.j2 dest=/etc/default/mesos
 
 - name: Set mesos zookeeper config
-  shell: echo {{mesos_zk}} | dd of=/etc/mesos/zk
+  template: src=etc.mesos.j2 dest=/etc/mesos/zk
+  with_dict:
+    zk: "{{mesos_zk}}"
