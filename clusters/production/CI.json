@@ -27,12 +27,6 @@
       "Description": "Mesos Master instance type",
       "Type": "String",
       "Default": "t2.medium"
-    },
-
-    "JenkinsInstanceType": {
-      "Description": "Jenkins instance type",
-      "Type": "String",
-      "Default": "t2.small"
     }
   },
 
