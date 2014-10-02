@@ -23,4 +23,3 @@ mesos-masters
 mesos-slaves
 haproxy
 remote-vnc
-jenkins
