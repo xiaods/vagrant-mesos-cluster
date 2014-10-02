@@ -4,6 +4,8 @@
   gather_facts: false
 
   tasks:
+  - name: Create /var/marathon
+    file: src=/var/marathon/  state=directory
   - name: Copy dockercfg to slaves
     copy: src=~/.dockercfg dest=/var/marathon/.dockercfg force=yes
 
