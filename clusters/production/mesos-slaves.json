@@ -42,7 +42,7 @@
 
   "Mappings" : {
     "RegionMap" : {
-      "us-east-1"      : { "AMI" : "ami-10389d78" }
+      "us-east-1"      : { "AMI" : "ami-9eaa1cf6" }
     }
   },
 
@@ -56,8 +56,7 @@
         "Monitoring" : true,
         "Tags": [
           { "Key" : "Name", "Value": "Mesos Slave 1.1" },
-          { "Key" : "Role", "Value" : "mesos-slave" },
-          { "Key" : "Group", "Value" : "production" }
+          { "Key" : "Role", "Value" : "mesos-slave" }
         ],
         "BlockDeviceMappings" : [
           { "DeviceName" : "/dev/sda1", "Ebs" : { "VolumeSize" : "100", "VolumeType" : "gp2" } }
@@ -69,7 +68,8 @@
           "DeviceIndex"              : "0",
           "DeleteOnTermination"      : "true",
           "SubnetId"                 : { "Ref" : "SubnetIdPub1" }
-        }]
+        }],
+        "PlacementGroupName" : "Mesos pub 1"
       }
     },
 
@@ -82,8 +82,7 @@
         "Monitoring" : true,
         "Tags": [
           { "Key" : "Name", "Value": "Mesos Slave 2.1" },
-          { "Key" : "Role", "Value" : "mesos-slave" },
-          { "Key" : "Group", "Value" : "production" }
+          { "Key" : "Role", "Value" : "mesos-slave" }
         ],
         "BlockDeviceMappings" : [
           { "DeviceName" : "/dev/sda1", "Ebs" : { "VolumeSize" : "100", "VolumeType" : "gp2" } }
@@ -95,7 +94,8 @@
           "DeviceIndex"              : "0",
           "DeleteOnTermination"      : "true",
           "SubnetId"                 : { "Ref" : "SubnetIdPub2" }
-        }]
+        }],
+        "PlacementGroupName" : "Mesos pub 2"
       }
     },
 
@@ -108,8 +108,7 @@
         "Monitoring" : true,
         "Tags": [
           { "Key" : "Name", "Value": "Mesos Slave 3.1" },
-          { "Key" : "Role", "Value" : "mesos-slave" },
-          { "Key" : "Group", "Value" : "production" }
+          { "Key" : "Role", "Value" : "mesos-slave" }
         ],
         "BlockDeviceMappings" : [
           { "DeviceName" : "/dev/sda1", "Ebs" : { "VolumeSize" : "100", "VolumeType" : "gp2" } }
@@ -121,7 +120,8 @@
           "DeviceIndex"              : "0",
           "DeleteOnTermination"      : "true",
           "SubnetId"                 : { "Ref" : "SubnetIdPub3" }
-        }]
+        }],
+        "PlacementGroupName" : "Mesos pub 3"
       }
     },
 
@@ -132,6 +132,8 @@
         "VpcId" : { "Ref" : "VpcId" },
         "SecurityGroupIngress" : [
           { "IpProtocol" : "tcp", "FromPort" : "22", "ToPort" : "22", "CidrIp" : "10.0.0.0/16" },
+          { "IpProtocol" : "tcp", "FromPort" : "10000", "ToPort" : "10999", "CidrIp" : "0.0.0.0/0" },
+          { "IpProtocol" : "tcp", "FromPort" : "12000", "ToPort" : "12999", "CidrIp" : "0.0.0.0/0" },
           { "IpProtocol" : "tcp", "FromPort" : "1024", "ToPort" : "65535", "CidrIp" : "10.0.0.0/16" }
         ]
       }

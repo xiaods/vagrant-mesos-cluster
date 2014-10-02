@@ -56,8 +56,7 @@
         "Monitoring" : true,
         "Tags": [
           { "Key" : "Name", "Value": "HAproxy 1" },
-          { "Key" : "Role", "Value" : "haproxy" },
-          { "Key" : "Group", "Value" : "production" }
+          { "Key" : "Role", "Value" : "haproxy" }
         ],
         "BlockDeviceMappings" : [
           { "DeviceName" : "/dev/sda1", "Ebs" : { "VolumeSize" : "20", "VolumeType" : "gp2" } }
@@ -90,8 +89,7 @@
         "Monitoring" : true,
         "Tags": [
           { "Key" : "Name", "Value": "HAproxy 2" },
-          { "Key" : "Role", "Value" : "haproxy" },
-          { "Key" : "Group", "Value" : "production" }
+          { "Key" : "Role", "Value" : "haproxy" }
         ],
         "BlockDeviceMappings" : [
           { "DeviceName" : "/dev/sda1", "Ebs" : { "VolumeSize" : "20", "VolumeType" : "gp2" } }

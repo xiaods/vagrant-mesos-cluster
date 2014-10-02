@@ -56,8 +56,7 @@
         "Monitoring" : true,
         "Tags": [
           { "Key" : "Name", "Value": "Mesos Master 1" },
-          { "Key" : "Role", "Value" : "mesos-master" },
-          { "Key" : "Group", "Value" : "production" }
+          { "Key" : "Role", "Value" : "mesos-master" }
         ],
         "BlockDeviceMappings" : [
           { "DeviceName" : "/dev/sda1", "Ebs" : { "VolumeSize" : "100", "VolumeType" : "gp2" } }
@@ -82,8 +81,7 @@
         "Monitoring" : true,
         "Tags": [
           { "Key" : "Name", "Value": "Mesos Master 2" },
-          { "Key" : "Role", "Value" : "mesos-master" },
-          { "Key" : "Group", "Value" : "production" }
+          { "Key" : "Role", "Value" : "mesos-master" }
         ],
         "BlockDeviceMappings" : [
           { "DeviceName" : "/dev/sda1", "Ebs" : { "VolumeSize" : "100", "VolumeType" : "gp2" } }
@@ -108,8 +106,7 @@
         "Monitoring" : true,
         "Tags": [
           { "Key" : "Name", "Value": "Mesos Master 3" },
-          { "Key" : "Role", "Value" : "mesos-master" },
-          { "Key" : "Group", "Value" : "production" }
+          { "Key" : "Role", "Value" : "mesos-master" }
         ],
         "BlockDeviceMappings" : [
           { "DeviceName" : "/dev/sda1", "Ebs" : { "VolumeSize" : "100", "VolumeType" : "gp2" } }
