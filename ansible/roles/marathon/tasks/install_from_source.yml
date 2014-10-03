@@ -31,3 +31,4 @@
   args:
     chdir: "{{marathon_bin_folder}}"
   when: marathon_src_jars.stdout == ""
+  notify: Restart marathon

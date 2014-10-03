@@ -9,3 +9,4 @@
 
 - name: Unpack marathon tarball.
   command: tar zxf /opt/src/{{marathon_file_name}} --strip-components=1 -C {{marathon_bin_folder}} chdir=/tmp creates={{marathon_bin_folder}}/bin
+  notify: Restart marathon
