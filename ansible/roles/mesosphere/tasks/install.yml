@@ -17,6 +17,7 @@
 
 - name: Install Mesos Debian Package
   shell: dpkg -i /opt/src/{{mesos_file_name}}
+  notify: Restart mesos
   when: mesos_version != mesos_installed_version.stdout
 
 - name: Download mesos python bindings (egg file)
@@ -24,12 +25,15 @@
 
 - name: Install Mesos python bindings
   shell: easy_install /opt/src/{{mesos_python_file_name}}
+  notify: Restart mesos
   when: mesos_version != mesos_installed_version.stdout
 
 - name: Mesos default config file
   template: src=mesos.j2 dest=/etc/default/mesos
+  notify: Restart mesos
 
 - name: Set mesos zookeeper config
   template: src=etc.mesos.j2 dest=/etc/mesos/zk
   with_dict:
     zk: "{{mesos_zk}}"
+  notify: Restart mesos
