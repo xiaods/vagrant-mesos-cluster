@@ -21,7 +21,13 @@
        dest={{marathon_bin_folder}}
        version={{marathon_version}}
 
+- name: Check wheter a jar is already built in the current src folder
+  command: find {{marathon_bin_folder}}/target -name 'marathon-assembly-*.jar'
+  register: marathon_src_jars
+  changed_when: False
+
 - name: Build Marathon
-  command: sbt assembly creates={{marathon_bin_folder}}/target
+  command: sbt assembly
   args:
     chdir: "{{marathon_bin_folder}}"
+  when: marathon_src_jars.stdout == ""
