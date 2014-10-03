@@ -24,5 +24,15 @@
   },
   "upgradeStrategy": {
     "minimumHealthCapacity": 1
-  }
+  },
+  "healthChecks": [
+    {
+      "protocol": "HTTP",
+      "path": "/healthcheck",
+      "gracePeriodSeconds": 10,
+      "intervalSeconds": 20,
+      "timeoutSeconds": 5,
+      "maxConsecutiveFailures": 3
+    }
+  ]
 }
