@@ -7,7 +7,7 @@
   notify: Restart haproxy
 
 - name: Write config file
-  template: src=haproxy.cfg.j2 dest=/etc/haproxy/haproxy.cfg
+  template: src={{ haproxy_template }} dest=/etc/haproxy/haproxy.cfg
   notify: Reload haproxy
 
 - name: Make sure haproxy is started and enabled

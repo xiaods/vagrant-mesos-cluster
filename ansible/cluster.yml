@@ -37,5 +37,10 @@
   vars:
     - haproxy_service_backends: "{{ groups['mesos-slaves'] }}"
 
+  pre_tasks:
+    - name: Check haproxy template
+      fail: msg="Provide HAproxy template path"
+      when: haproxy_template is not defined
+
   roles:
     - { role: haproxy, tags: [ 'haproxy' ] }
