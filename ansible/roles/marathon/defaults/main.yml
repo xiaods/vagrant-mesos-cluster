@@ -1,8 +1,8 @@
 ---
-marathon_install_mode: "source" # 'bin' or 'source'
+marathon_install_mode: "bin" # 'bin' or 'source'
 marathon_run_mode: "server" # 'server' or 'bridge'
 
-marathon_version: "5230e908f3534d9379886b153f11e9a1eaf8fe50"
+marathon_version: "0.7.3"
 marathon_file_name:  "marathon-{{marathon_version}}.tgz"
 marathon_download_url: "http://downloads.mesosphere.io/marathon/v{{marathon_version}}/{{marathon_file_name}}"
 
