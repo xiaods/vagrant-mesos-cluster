@@ -132,8 +132,6 @@
         "VpcId" : { "Ref" : "VpcId" },
         "SecurityGroupIngress" : [
           { "IpProtocol" : "tcp", "FromPort" : "22", "ToPort" : "22", "CidrIp" : "10.0.0.0/16" },
-          { "IpProtocol" : "tcp", "FromPort" : "10000", "ToPort" : "10999", "CidrIp" : "0.0.0.0/0" },
-          { "IpProtocol" : "tcp", "FromPort" : "12000", "ToPort" : "12999", "CidrIp" : "0.0.0.0/0" },
           { "IpProtocol" : "tcp", "FromPort" : "1024", "ToPort" : "65535", "CidrIp" : "10.0.0.0/16" }
         ]
       }
