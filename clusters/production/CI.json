@@ -27,6 +27,12 @@
       "Description": "Mesos Master instance type",
       "Type": "String",
       "Default": "t2.medium"
+    },
+
+    "VpnInstanceType": {
+      "Description": "Mesos Master instance type",
+      "Type": "String",
+      "Default": "t2.medium"
     }
   },
 
@@ -94,12 +100,58 @@
           { "IpProtocol" : "tcp", "FromPort" : "443", "ToPort" : "443", "CidrIp" : "0.0.0.0/0" }
         ]
       }
+    },
+
+    "VpnInstance" : {
+      "Type" : "AWS::EC2::Instance",
+      "Properties" : {
+        "InstanceType" : { "Ref" : "VpnInstanceType" },
+        "KeyName" : { "Ref" : "KeyName" },
+        "ImageId" : { "Fn::FindInMap" : [ "RegionMap", { "Ref" : "AWS::Region" }, "AMI" ]},
+        "Monitoring" : true,
+        "Tags": [
+           { "Key" : "Name", "Value": "VPN" }
+        ],
+        "BlockDeviceMappings" : [
+          { "DeviceName" : "/dev/sda1", "Ebs" : { "VolumeSize" : "10", "VolumeType" : "gp2" } }
+        ],
+        "NetworkInterfaces" : [{
+          "GroupSet"                 : [{ "Ref" : "AnsibleGroup" }],
+          "PrivateIpAddress"         : "10.0.1.6",
+          "DeviceIndex"              : "0",
+          "DeleteOnTermination"      : "true",
+          "SubnetId"                 : { "Ref" : "SubnetIdPub1" }
+        }]
+      }
+    },
+
+    "VpnEIP" : {
+      "Type": "AWS::EC2::EIP",
+      "Properties": {
+        "InstanceId" : { "Ref" : "VpnInstance" },
+        "Domain" : "vpc"
+      }
+    },
+
+    "VpnGroup" : {
+      "Type" : "AWS::EC2::SecurityGroup",
+      "Properties" : {
+        "GroupDescription" : "ansible role security group",
+        "VpcId" : { "Ref" : "VpcId" },
+        "SecurityGroupIngress" : [
+          { "IpProtocol" : "tcp", "FromPort" : "22", "ToPort" : "22", "CidrIp" : "0.0.0.0/0" },
+          { "IpProtocol" : "tcp", "FromPort" : "1194", "ToPort" : "1194", "CidrIp" : "0.0.0.0/0" }
+        ]
+      }
     }
   },
 
   "Outputs" : {
     "AnsibleIP" : {
       "Value" : { "Ref" : "AnsibleEIP" }
+    },
+    "VpnIP" : {
+      "Value" : { "Ref" : "VpnEIP" }
     }
   }
 }

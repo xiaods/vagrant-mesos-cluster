@@ -15,7 +15,11 @@
 10.0.1.21
 10.0.2.21
 
+[vpn]
+10.0.1.6
+
 [production:children]
 mesos-masters
 mesos-slaves
 haproxy
+vpn
