@@ -1,7 +1,4 @@
-require 'json'
-
 VAGRANTFILE_API_VERSION = "2"
-DEFAULT_CLUSTER = "vagrant"
 
 base_dir = File.expand_path(File.dirname(__FILE__))
 cluster = {
