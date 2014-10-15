@@ -4,7 +4,11 @@ VAGRANTFILE_API_VERSION = "2"
 DEFAULT_CLUSTER = "vagrant"
 
 base_dir = File.expand_path(File.dirname(__FILE__))
-cluster = JSON.parse(IO.read(File.join(base_dir, "clusters", ENV['CLUSTER'] || DEFAULT_CLUSTER, "cluster.json")))
+cluster = {
+  "mesos-master1" => { :ip => "10.0.10.11",  :cpus => 1, :mem => 1024 },
+  "mesos-slave1"  => { :ip => "10.0.10.101", :cpus => 1, :mem => 1024 },
+  "haproxy1"      => { :ip => "10.0.10.21",  :cpus => 1, :mem => 512 }
+}
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
@@ -20,11 +24,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       cfg.vm.provider :virtualbox do |vb, override|
         override.vm.box = "trusty64"
         override.vm.box_url = "https://cloud-images.ubuntu.com/vagrant/trusty/current/trusty-server-cloudimg-amd64-vagrant-disk1.box"
-        override.vm.network :private_network, ip: "#{info["ip"]}"
+        override.vm.network :private_network, ip: "#{info[:ip]}"
         override.vm.hostname = hostname
 
         vb.name = 'vagrant-mesos-' + hostname
-        vb.customize ["modifyvm", :id, "--memory", info["config"]["mem"], "--cpus", info["config"]["cpus"], "--hwvirtex", "on" ]
+        vb.customize ["modifyvm", :id, "--memory", info[:mem], "--cpus", info[:cpus], "--hwvirtex", "on" ]
       end
 
       # provision nodes with ansible
