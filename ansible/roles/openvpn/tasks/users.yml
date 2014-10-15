@@ -11,8 +11,8 @@
 - name: Add user certificate generation scripts
   template: src=generate_user_crt.sh.j2 dest=/etc/openvpn/generate_user_crt.sh mode=0755
 
-- name: Run ca script
-  command: /etc/openvpn/generate_user_crt.sh {{ item }} chdir=/usr/share/easy-rsa creates={{ openvpn_easyrsa_dir }}/test.key
+- name: Run user crt generation script
+  command: /etc/openvpn/generate_user_crt.sh {{ item }} chdir=/usr/share/easy-rsa creates={{ openvpn_easyrsa_dir }}/{{ item }}.key
   notify: Restart openvpn
   with_items: openvpn_users
 
@@ -22,8 +22,6 @@
 
 - name: Zip up all needed files
   shell: "zip -j {{ openvpn_easyrsa_dir }}/{{ item }}.zip {{ openvpn_easyrsa_dir }}/ca.crt {{ openvpn_easyrsa_dir }}/{{ item }}.crt {{ openvpn_easyrsa_dir }}/{{ item }}.key {{ openvpn_easyrsa_dir }}/{{ item }}.client.conf {{ openvpn_easyrsa_dir }}/ta.key"
-  args:
-    creates: "{{ openvpn_easyrsa_dir }}/{{ item }}.zip"
   with_items: openvpn_users
 
 - name: Fetch generated files
