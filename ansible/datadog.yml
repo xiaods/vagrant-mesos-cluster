@@ -1,9 +1,0 @@
----
-- hosts: production
-  sudo: yes
-
-  vars_prompt:
-    datadog_apikey: "Datadog API key?"
-
-  roles:
-    - datadog
