@@ -2,6 +2,12 @@
 - name: Install zip
   apt: name=zip state=installed
 
+- name: Get public ipv4
+  command: curl --connect-timeout 5 http://169.254.169.254/latest/meta-data/public-ipv4
+  changed_when: False
+  ignore_errors: True
+  register: openvpn_public_ip
+
 - name: Add user certificate generation scripts
   template: src=generate_user_crt.sh.j2 dest=/etc/openvpn/generate_user_crt.sh mode=0755
 

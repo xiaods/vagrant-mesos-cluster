@@ -38,7 +38,7 @@ proto tcp
 # The hostname/IP and port of the server.
 # You can have multiple remote entries
 # to load balance between the servers.
-remote {{ ansible_eth0.ipv4.address }} 1194
+remote {{ openvpn_public_ip.stdout | default(ansible_eth0.ipv4.address) }} 1194
 
 # Choose a random host from the remote
 # list for load-balancing.  Otherwise
@@ -84,8 +84,8 @@ persist-tun
 # for each client.  A single ca
 # file can be used for all clients.
 ca ca.crt
-cert test.crt
-key test.key
+cert {{ item }}.crt
+key {{ item }}.key
 
 # Verify server certificate by checking
 # that the certicate has the nsCertType
