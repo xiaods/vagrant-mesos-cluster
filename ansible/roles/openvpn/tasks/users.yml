@@ -21,7 +21,7 @@
   with_items: openvpn_users
 
 - name: Zip up all needed files
-  shell: "zip -j {{ openvpn_easyrsa_dir }}/{{ item }}.zip {{ openvpn_easyrsa_dir }}/ca.crt {{ openvpn_easyrsa_dir }}/{{ item }}.crt {{ openvpn_easyrsa_dir }}/{{ item }}.key {{ openvpn_easyrsa_dir }}/{{ item }}.client.conf"
+  shell: "zip -j {{ openvpn_easyrsa_dir }}/{{ item }}.zip {{ openvpn_easyrsa_dir }}/ca.crt {{ openvpn_easyrsa_dir }}/{{ item }}.crt {{ openvpn_easyrsa_dir }}/{{ item }}.key {{ openvpn_easyrsa_dir }}/{{ item }}.client.conf {{ openvpn_easyrsa_dir }}/ta.key"
   args:
     creates: "{{ openvpn_easyrsa_dir }}/{{ item }}.zip"
   with_items: openvpn_users

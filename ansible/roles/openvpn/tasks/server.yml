@@ -44,6 +44,9 @@
     creates: "{{ openvpn_easyrsa_dir }}/dh2048.pem"
   notify: Restart openvpn
 
+- name: Create tsl auth key
+  command: openvpn --genkey --secret {{ openvpn_easyrsa_dir }}/ta.key creates={{ openvpn_easyrsa_dir }}/ta.key
+
 - name: Allow ipv4 forwarding
   sysctl: name=net.ipv4.ip_forward value=1 state=present
 
