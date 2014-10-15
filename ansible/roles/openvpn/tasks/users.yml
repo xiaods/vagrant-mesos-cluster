@@ -1,0 +1,25 @@
+---
+- name: Install zip
+  apt: name=zip state=installed
+
+- name: Add user certificate generation scripts
+  template: src=generate_user_crt.sh.j2 dest=/etc/openvpn/generate_user_crt.sh mode=0755
+
+- name: Run ca script
+  command: /etc/openvpn/generate_user_crt.sh {{ item }} chdir=/usr/share/easy-rsa creates={{ openvpn_easyrsa_dir }}/test.key
+  notify: Restart openvpn
+  with_items: openvpn_users
+
+- name: Create client config file
+  template: src=client.conf.j2 dest={{ openvpn_easyrsa_dir }}/{{ item }}.client.conf
+  with_items: openvpn_users
+
+- name: Zip up all needed files
+  shell: "zip -j {{ openvpn_easyrsa_dir }}/{{ item }}.zip {{ openvpn_easyrsa_dir }}/ca.crt {{ openvpn_easyrsa_dir }}/{{ item }}.crt {{ openvpn_easyrsa_dir }}/{{ item }}.key {{ openvpn_easyrsa_dir }}/{{ item }}.client.conf"
+  args:
+    creates: "{{ openvpn_easyrsa_dir }}/{{ item }}.zip"
+  with_items: openvpn_users
+
+- name: Fetch generated files
+  fetch: src={{ openvpn_easyrsa_dir }}/{{ item }}.zip dest=/tmp/ flat=yes
+  with_items: openvpn_users
