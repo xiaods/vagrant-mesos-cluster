@@ -10,6 +10,9 @@
   gather_facts: false
   sudo: yes
 
+  vars:
+    - mesos_quorum: "{{ ((groups['mesos-masters'] | length) / 2) | round(0, 'ceil') | int }}"
+
   roles:
     - { role: zookeeper, tags: [ 'zookeeper' ] }
     - { role: mesosphere, tags: [ 'mesos' ], mesos_mode: master }

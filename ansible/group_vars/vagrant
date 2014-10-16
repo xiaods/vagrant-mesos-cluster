@@ -1,10 +1,6 @@
 ---
 # mesos-master
 mesos_zk: "zk://10.0.10.11:2181/mesos"
-mesos_options_master:
-  cluster: mesos_vagrant_cluster
-  work_dir: /var/run/mesos
-  quorum: 1
 marathon_zk: "zk://10.0.10.11:2181/marathon"
 zookeeper_servers:
   - { id: 1, host: 10.0.10.11 }
