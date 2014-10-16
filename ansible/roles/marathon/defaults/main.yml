@@ -10,4 +10,5 @@ marathon_bin_folder: "/opt/marathon/{{marathon_version}}"
 
 marathon_log_file: "/var/log/marathon.log"
 marathon_zk: "zk://localhost:2181/marathon"
+marathon_launch_timeout: 600
 marathon_runtime_params: ""
