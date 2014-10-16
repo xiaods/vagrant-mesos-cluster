@@ -6,7 +6,7 @@ mesos_download_url: "http://downloads.mesosphere.io/master/ubuntu/14.04/{{mesos_
 mesos_python_download_url: "http://downloads.mesosphere.io/master/ubuntu/14.04/{{mesos_python_file_name}}"
 
 mesos_cluster_name: mesos_cluster
-mesos_ip: 127.0.0.1
+mesos_ip: "{{ansible_eth0.ipv4.address}}"
 mesos_log_dir: "/var/log/mesos"
 mesos_work_dir: "/var/run/mesos"
 mesos_ulimit: "-n 8192"

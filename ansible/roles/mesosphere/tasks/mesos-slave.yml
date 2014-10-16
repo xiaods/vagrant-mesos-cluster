@@ -16,7 +16,7 @@
 - name: Set mesos slave hostname to its IP
   template: src=etc.mesos.j2 dest=/etc/mesos-slave/{{item.key}}
   with_dict:
-    hostname: "{{mesos_ip}}"
+    hostname: "{{inventory_hostname}}"
 
 - name: Start mesos-slave
   service: name=mesos-slave state=started enabled=yes sleep=5

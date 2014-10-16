@@ -2,13 +2,13 @@
 127.0.0.1 ansible_connection=local
 
 [mesos-masters]
-mesos-master1 ansible_ssh_host=10.0.10.11 mesos_ip=10.0.10.11 zookeeper_myid=1
+10.0.10.11 zookeeper_myid=1
 
 [mesos-slaves]
-mesos-slave1 ansible_ssh_host=10.0.10.101 mesos_ip=10.0.10.101
+10.0.10.101
 
 [haproxy]
-haproxy1 ansible_ssh_host=10.0.10.21
+10.0.10.21
 
 [vagrant:children]
 mesos-masters
