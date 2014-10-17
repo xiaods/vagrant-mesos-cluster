@@ -9,6 +9,7 @@ marathon_download_url: "http://downloads.mesosphere.io/marathon/v{{marathon_vers
 marathon_bin_folder: "/opt/marathon/{{marathon_version}}"
 
 marathon_ip: "{{ansible_eth0.ipv4.address}}"
+marathon_port: 8080
 marathon_log_file: "/var/log/marathon.log"
 marathon_zk: "zk://localhost:2181/marathon"
 marathon_launch_timeout: 600
