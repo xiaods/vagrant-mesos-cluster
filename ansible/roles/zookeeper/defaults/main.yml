@@ -7,4 +7,4 @@ zookeeper_logs: /var/log/zookeeper
 
 zookeeper_myid: 1
 zookeeper_servers:
-  - { id: 1, host: localhost }
+  - localhost

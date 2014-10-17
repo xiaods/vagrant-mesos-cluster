@@ -25,6 +25,7 @@
   sudo: yes
 
   vars:
+    - zookeeper_servers: "{{ groups['mesos-masters'] }}"
     - mesos_quorum: "{{ ((groups['mesos-masters'] | length) / 2) | round(0, 'ceil') | int }}"
 
   roles:
