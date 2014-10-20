@@ -2,7 +2,7 @@
 127.0.0.1 ansible_connection=local
 
 [mesos-masters]
-10.0.10.11 zookeeper_myid=1
+10.0.10.11
 
 [mesos-slaves]
 10.0.10.101
