@@ -3,8 +3,7 @@ VAGRANTFILE_API_VERSION = "2"
 base_dir = File.expand_path(File.dirname(__FILE__))
 cluster = {
   "mesos-master1" => { :ip => "100.0.10.11",  :cpus => 1, :mem => 1024 },
-  "mesos-slave1"  => { :ip => "100.0.10.101", :cpus => 1, :mem => 1024 },
-  "haproxy1"      => { :ip => "100.0.10.21",  :cpus => 1, :mem => 512 }
+  "mesos-slave1"  => { :ip => "100.0.10.101", :cpus => 1, :mem => 1024 }
 }
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
@@ -32,8 +31,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       cfg.vm.provision :ansible do |ansible|
         ansible.verbose = "v"
 
-        ansible.inventory_path = "ansible/vagrant"
-        ansible.playbook = "ansible/cluster.yml"
+        ansible.inventory_path = "inventory/vagrant"
+        ansible.playbook = "cluster.yml"
         ansible.limit = "#{info[:ip]}" # Ansible hosts are identified by ip
       end
 

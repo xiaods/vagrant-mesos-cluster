@@ -46,19 +46,3 @@
   roles:
     - { role: mesosphere, tags: [ 'mesos' ], mesos_mode: slave }
     - { role: marathon, tags: [ 'marathon'], marathon_run_mode: bridge }
-
-# HAproxy
-- hosts: haproxy
-  gather_facts: false
-  sudo: yes
-
-  roles:
-    - { role: haproxy, tags: [ 'haproxy' ] }
-
-# VPN
-- hosts: vpn
-  gather_facts: false
-  sudo: yes
-
-  roles:
-    - { role: openvpn, tags: [ 'vpn' ] }
