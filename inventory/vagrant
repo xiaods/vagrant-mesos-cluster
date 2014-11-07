@@ -7,10 +7,6 @@
 [mesos-slaves]
 100.0.10.101
 
-[haproxy]
-100.0.10.21
-
 [vagrant:children]
 mesos-masters
 mesos-slaves
-haproxy
