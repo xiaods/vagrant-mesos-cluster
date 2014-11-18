@@ -4,6 +4,7 @@
   register: marathon_bridge_script_diff
   changed_when: False
   ignore_errors: True
+  always_run: True
 
 - name: Run haproxy bridge install script
   command: "{{marathon_bin_folder}}/bin/haproxy-marathon-bridge install_haproxy_system"
