@@ -4,11 +4,12 @@
 
 - name: Add Docker deb repository
   apt_repository:
-    repo="deb https://get.docker.io/ubuntu docker main" 
-    state=present 
+    repo="deb https://get.docker.io/ubuntu docker main"
+    state=present
     update_cache=yes
 
 - name: Install Docker
   apt: pkg=lxc-docker state=installed
 
-
+- name: Install Docker module
+  pip: name=docker-py
