@@ -148,13 +148,15 @@ function apps {
 
 listen $app_name-$app_port
   bind 0.0.0.0:$app_port
-  mode tcp
   option tcplog
   balance leastconn
 EOF
       if [[ $app_name == *$sticky* ]]
       then
-        out "  cookie MSLS insert indirect nocache maxidle 30m maxlife 8h"
+        out "  mode http"
+        out "  cookie SIO insert nocache maxidle 30m maxlife 1h"
+      else
+        out "  mode tcp"
       fi
 
       while [[ $# -ne 0 ]]
