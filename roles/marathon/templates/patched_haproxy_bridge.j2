@@ -163,7 +163,9 @@ EOF
       do
         if [[ $app_name == *$sticky* ]]
         then
-          out "  server ${app_name}-$# $1 check cookie SKG-$#"
+          # Create a hash form ip:port this will be share between the ha-bridge
+          local server_hash=`echo $1 | md5sum | cut -f1 -d" "`
+          out "  server ${app_name}-$# $1 check cookie ${server_hash}"
         else
           out "  server ${app_name}-$# $1 check"
         fi
