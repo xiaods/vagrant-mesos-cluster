@@ -3,6 +3,7 @@
   apt: pkg={{item}} state=installed
   with_items:
     - openjdk-7-jre-headless
+    - libsvn1
 
 - file: path=/opt/src state=directory recurse=yes
 
