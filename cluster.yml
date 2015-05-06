@@ -46,3 +46,4 @@
   roles:
     - { role: mesosphere, tags: [ 'mesos' ], mesos_mode: slave }
     - { role: marathon, tags: [ 'marathon'], marathon_run_mode: bridge }
+    - { role: docker, tags: [ 'docker' ], docker_version: lxc-docker-1.6.0 }
