@@ -1,0 +1,6 @@
+---
+- name: Download docker-machine
+  get_url: url={{docker_machine_url}} dest='/usr/local/bin/docker-machine' mode=0755
+
+- name: Install Docker With Docker Machine
+  command: "docker-machine create -d generic --generic-ip-address: {{ groups['mesos-masters'][0] }} --generic-ssh-user: 'ubuntu' --generic-ssh-key: /etc/ssh/ssh_host_rsa_key --generic-ssh-port: 22"
