@@ -1,6 +1,6 @@
 ---
 - include: regular.yml
-  when: installation_type != 'machine'
+  when: installation_type == 'traditional'
 
 - include: machine.yml
   when: installation_type == 'machine'
