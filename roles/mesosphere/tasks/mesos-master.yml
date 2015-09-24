@@ -1,19 +1,21 @@
 ---
-- name: Overwrite upstart script to force creation of work_dir on start
-  template: src=mesos-master.conf.j2 dest=/etc/init/mesos-master.conf
-
-- name: Set mesos master required options
-  template: src=etc.mesos.j2 dest=/etc/mesos-master/{{item.key}}
-  with_dict:
-    work_dir: "{{ mesos_work_dir }}"
-    cluster: "{{ mesos_cluster_name }}"
-    quorum: "{{ mesos_quorum }}"
-  notify: Restart mesos-master
-
-- name: Set mesos master optional options
-  template: src=etc.mesos.j2 dest=/etc/mesos-master/{{item.key}}
-  with_dict: mesos_options_master | default({}) # with_dict needs explicit default
-  notify: Restart mesos-master
-
-- name: Start mesos-master
-  service: name=mesos-master state=started enabled=yes sleep=5
+- name: Make sure mesos master is running and config is up-to-date
+  sudo: yes
+  docker:
+    image: "{{mesos_master_docker_image}}"
+    name: "{{mesos_master_name}}"
+    expose:
+      - 5050
+    ports:
+      - "5050:5050"
+    env:
+      MESOS_HOSTNAME: "{{host_ip}}"
+      MESOS_IP: "{{host_ip}}"
+      MESOS_LOGGING_LEVEL: "{{mesos_logging_level}}"
+      MESOS_LOG_DIR: "{{mesos_log_dir}}"
+      MESOS_QUORUM: "{{mesos_quorum}}"
+      MESOS_ZK: "{{mesos_zk}}"
+    privileged: True
+    net: host
+    restart_policy: always
+    state: restarted

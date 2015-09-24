@@ -5,7 +5,7 @@
 - name: Apt install required system packages.
   apt: pkg={{item}} state=installed
   with_items: apt_system_packages
-  
+
 - name: Check installed pip version
   shell: pip -V
   register: common_pip_version

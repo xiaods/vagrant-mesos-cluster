@@ -5,16 +5,18 @@
   tasks:
     - name: Set global cluster variable facts
       set_fact:
-        zk_endpoint: "zk://{{ groups['mesos-masters'] | join(':2181,') }}:2181"
+        marathon_ips: "{{ groups['mesos-masters'] | join(':8080,') }}:8080"
+        zk_endpoint: "{{ groups['mesos-masters'] | join(':2181,') }}:2181"
+        host_ip: "{{ vagrant_ip | default('ansible_eth0.ipv4.address') }}"
 
     - name: Set global mesos variable facts
       set_fact:
-        mesos_zk: "{{ zk_endpoint }}/mesos"
+        mesos_zk: "zk://{{ zk_endpoint }}/mesos"
 
     - name: Set global marathon variable facts
       set_fact:
         marathon_host_servers: "{{ groups['mesos-masters'] }}"
-        marathon_zk: "{{ zk_endpoint }}/marathon"
+        marathon_zk: "zk://{{ zk_endpoint }}/marathon"
 
   roles:
     - common
@@ -27,8 +29,11 @@
   vars:
     - zookeeper_servers: "{{ groups['mesos-masters'] }}"
     - mesos_quorum: "{{ ((groups['mesos-masters'] | length) / 2) | round(0, 'ceil') | int }}"
+    - mesos_logging_level: "WARNING"
+    - marathon_logging_level: "warn"
 
   roles:
+    - { role: docker, tags: [ 'docker' ], installation_type: traditional }
     - { role: zookeeper, tags: [ 'zookeeper' ] }
     - { role: mesosphere, tags: [ 'mesos' ], mesos_mode: master }
     - { role: marathon, tags: [ 'marathon'] }
@@ -39,11 +44,13 @@
   sudo: yes
 
   vars:
-    - mesos_options_slave:
-        containerizers: "docker,mesos"
-        executor_registration_timeout: 5mins
+    - mesos_executor_registration_timeout: 5mins
+    - mesos_logging_level: "WARNING"
+    - marathon_logging_level: "warn"
 
   roles:
-    - { role: mesosphere, tags: [ 'mesos' ], mesos_mode: slave }
-    - { role: marathon, tags: [ 'marathon'], marathon_run_mode: bridge }
     - { role: docker, tags: [ 'docker' ], installation_type: traditional }
+    - { role: mesosphere, tags: [ 'mesos' ], mesos_mode: agent }
+    - { role: marathon, tags: [ 'marathon'] }
+    - { role: haproxy, tags: [ 'haproxy'] }
+    - { role: haproxy_bridge, tags: [ 'haproxy-bridge'] }
