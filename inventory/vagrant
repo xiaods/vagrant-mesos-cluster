@@ -3,11 +3,12 @@
 
 [mesos-masters]
 100.0.10.11
-100.0.20.11
+
+[mesos-masters-dns]
+100.0.10.11
 
 [mesos-slaves]
 100.0.10.101
-100.0.20.101
 
 [vagrant:children]
 mesos-masters

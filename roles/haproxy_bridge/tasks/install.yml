@@ -5,8 +5,8 @@
     image: "{{haproxy_marathon_docker_image}}"
     name: "{{haproxy_marathon_name}}"
     env:
-      MARATHON: "{{marathon_ips}}"
-      ZK: "{{zk_endpoint}}"
+      MARATHON: "{{marathon_dns_endpoint}}"
+      ZK: "{{zk_dns_endpoint}}"
     privileged: True
     net: host
     restart_policy: always

@@ -9,7 +9,7 @@
     expose:
       - 9090
     env:
-      ZK: "{{zk_endpoint}}"
+      ZK: "{{zk_dns_endpoint}}"
     privileged: True
     net: host
     restart_policy: always
