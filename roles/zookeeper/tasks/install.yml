@@ -1,19 +1,36 @@
 ---
-- name: Update apt cache
-  apt: update_cache=yes cache_valid_time=3600
+- name: create /etc/haproxy-bridge/
+  file: path={{zookeeper_data}} state=directory
+  sudo: yes
 
-- name: Apt install required system packages.
-  apt: pkg={{item}} state=installed
-  with_items:
-    - openjdk-7-jdk
+- name: Write myid file.
+  template: src=myid.j2 dest={{zookeeper_myid_path}}
+  sudo: yes
 
-- file: path=/opt/src state=directory
-- file: path={{zookeeper_dir}} state=directory
+- shell: "cat {{zookeeper_myid_path}}"
+  register: cat_zookeeper_id
 
-- name: Download zookeeper version.
-  get_url: url={{zookeeper_url}} dest=/opt/src/zookeeper-{{zookeeper_version}}.tar.gz
+- debug: var=cat_zookeeper_id.stdout
 
-- name: Unpack tarball.
-  command: tar zxf /opt/src/zookeeper-{{zookeeper_version}}.tar.gz --strip-components=1 chdir={{zookeeper_dir}} creates={{zookeeper_dir}}/bin
-
-
+- name: Make sure zookeeper is running and config is up-to-date
+  sudo: yes
+  docker:
+    image: "{{zookeeper_docker_image}}"
+    name: "{{zookeeper_name}}"
+    volumes:
+      - "{{zookeeper_data}}/data:/tmp/zookeeper"
+    expose:
+      - 2181
+      - 2888
+      - 3888
+    ports:
+      - "2181:2181"
+      - "2888:2888"
+      - "3888:3888"
+    env:
+      MYID: "{{ cat_zookeeper_id.stdout }}"
+      SERVERS: "{{ groups['mesos-masters'] | join(',') }}"
+    privileged: True
+    net: host
+    restart_policy: always
+    state: restarted
