@@ -4,6 +4,9 @@
 [mesos-masters]
 100.0.10.11
 
+[mesos-masters-dns]
+100.0.10.11
+
 [mesos-slaves]
 100.0.10.101
 

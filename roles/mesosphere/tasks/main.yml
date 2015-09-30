@@ -1,4 +1,6 @@
 ---
-- include: install.yml
+- include: mesos-master.yml
+  when: mesos_mode is defined and mesos_mode == "master"
 
-- include: deploy.yml
+- include: mesos-agent.yml
+  when: mesos_mode is defined and mesos_mode == "agent"

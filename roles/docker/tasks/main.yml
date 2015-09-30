@@ -4,3 +4,5 @@
 
 - include: machine.yml
   when: installation_type == 'machine'
+
+- include: docker-py.yml
