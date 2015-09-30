@@ -1,0 +1,12 @@
+---
+- name: create /etc/haproxy-bridge/
+  file: path=/etc/haproxy-bridge/ state=directory
+  sudo: yes
+
+- name: Add Custom Config
+  copy: src=app.py dest=/etc/haproxy-bridge/app.py
+  sudo: yes
+
+- name: Add Custom Config
+  copy: src=haproxy.cfg.j2 dest=/etc/haproxy-bridge/haproxy.cfg.j2
+  sudo: yes

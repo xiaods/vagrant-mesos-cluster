@@ -4,6 +4,9 @@
   docker:
     image: "{{haproxy_marathon_docker_image}}"
     name: "{{haproxy_marathon_name}}"
+    volumes:
+      - "/etc/haproxy-bridge/haproxy.cfg.j2:/usr/src/app/files/haproxy.cfg.j2"
+      - "/etc/haproxy-bridge/app.py:/usr/src/app/app.py"
     env:
       MARATHON: "{{marathon_dns_endpoint}}"
       ZK: "{{zk_dns_endpoint}}"
