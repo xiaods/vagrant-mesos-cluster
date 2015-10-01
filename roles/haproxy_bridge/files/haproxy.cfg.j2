@@ -78,8 +78,6 @@ backend {{ app.id | regex_replace('/(.*)$', '\\1') }}{{ portMapping.servicePort 
 
 {% else %}
 
-    mode tcp
-
 {% for task in app.tasks %}
 
 {% if task.healthCheckResults and task.healthCheckResults[-1].alive %}

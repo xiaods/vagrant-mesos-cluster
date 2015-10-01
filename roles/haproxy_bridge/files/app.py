@@ -70,8 +70,7 @@ def main():
             return re.sub(pattern, repl, string)
 
         def md5_string(value):
-            value.encode('utf-8')
-            return hashlib.md5(value).hexdigest()
+            return hashlib.md5(value.encode('utf-8')).hexdigest()
 
         environment = jinja2.Environment()
         environment.filters['regex_replace'] = regex_replace
