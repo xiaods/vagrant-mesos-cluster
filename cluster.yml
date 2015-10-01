@@ -8,7 +8,7 @@
         marathon_dns_endpoint: "{{ groups['mesos-masters-dns'][0] }}:8080"
         zk_endpoint: "{{ groups['mesos-masters'] | join(':2181,') }}:2181"
         zk_dns_endpoint: "{{ groups['mesos-masters-dns'][0] }}:2181"
-        host_ip: "{{ vagrant_ip | default('ansible_eth0.ipv4.address') }}"
+        host_ip: "{{ vagrant_ip | default(ansible_eth0.ipv4.address) }}"
 
     - name: Set global mesos variable facts
       set_fact:
