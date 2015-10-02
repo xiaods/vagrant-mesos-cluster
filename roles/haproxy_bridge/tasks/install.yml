@@ -1,16 +1,28 @@
 ---
-- name: Make sure haproxy-bridge is running and config is up-to-date
+- name: create /etc/dd-agent/conf.d
+  file: path={{haproxy_bridge_bin_folder}}/bin state=directory
   sudo: yes
-  docker:
-    image: "{{haproxy_marathon_docker_image}}"
-    name: "{{haproxy_marathon_name}}"
-    volumes:
-      - "/etc/haproxy-bridge/haproxy.cfg.j2:/usr/src/app/files/haproxy.cfg.j2"
-      - "/etc/haproxy-bridge/app.py:/usr/src/app/app.py"
-    env:
-      MARATHON: "{{marathon_dns_endpoint}}"
-      ZK: "{{zk_dns_endpoint}}"
-    privileged: True
-    net: host
-    restart_policy: always
-    state: restarted
+
+- name: Add Stickiness
+  template: src=patched_haproxy_bridge.j2 dest={{haproxy_bridge_bin_folder}}/bin/haproxy-marathon-bridge
+  sudo: yes
+
+- name: Check wheter bridge script has changed
+  command: diff {{haproxy_bridge_bin_folder}}/bin /usr/local/bin/haproxy-marathon-bridge
+  register: marathon_bridge_script_diff
+  changed_when: False
+  ignore_errors: True
+  always_run: True
+  sudo: yes
+
+- name: Make sure the haproxy-bridge is executable
+  command: "chmod +x {{haproxy_bridge_bin_folder}}/bin/haproxy-marathon-bridge"
+  sudo: yes
+
+- name: Run haproxy bridge install script
+  command: "{{haproxy_bridge_bin_folder}}/bin/haproxy-marathon-bridge install_haproxy_system"
+  when: marathon_bridge_script_diff.stdout != "" or marathon_bridge_script_diff.stderr != ""
+  sudo: yes
+
+- name: Re-Configure marathon hosts
+  template: src=marathons.j2 dest=/etc/haproxy-marathon-bridge/marathons

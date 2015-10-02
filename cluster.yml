@@ -52,6 +52,4 @@
   roles:
     - { role: docker, tags: [ 'docker' ], installation_type: traditional }
     - { role: mesosphere, tags: [ 'mesos' ], mesos_mode: agent }
-    - { role: marathon, tags: [ 'marathon'] }
-    - { role: haproxy, tags: [ 'haproxy'] }
     - { role: haproxy_bridge, tags: [ 'haproxy-bridge'] }
