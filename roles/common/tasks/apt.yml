@@ -3,7 +3,7 @@
   apt: update_cache=yes
 
 - name: Apt install required system packages.
-  apt: pkg={{item}} state=installed
+  apt: pkg={{item}} state=latest update_cache=yes
   with_items: apt_system_packages
 
 - name: Check installed pip version
