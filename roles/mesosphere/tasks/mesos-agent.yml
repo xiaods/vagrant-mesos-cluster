@@ -7,6 +7,7 @@
     volumes:
       - "/sys/fs/cgroup:/sys/fs/cgroup"
       - "/var/run/docker.sock:/var/run/docker.sock"
+      - "/var/marathon:/var/marathon"
     ports:
       - "5051:5051"
     expose:
@@ -14,6 +15,7 @@
     env:
       MESOS_CONTAINERIZERS: "{{mesos_containerizers}}"
       MESOS_EXECUTOR_REGISTRATION_TIMEOUT: "{{mesos_executor_registration_timeout}}"
+      MESOS_DOCKER_STOP_TIMEOUT: "{{mesos_docker_stop_timeout}}"
       MESOS_HOSTNAME: "{{inventory_hostname}}"
       MESOS_IP: "{{host_ip}}"
       MESOS_LOGGING_LEVEL: "{{mesos_logging_level}}"

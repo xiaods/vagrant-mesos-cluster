@@ -1,0 +1,3 @@
+---
+- name: Create /var/marathon
+  file: path=/var/marathon/  state=directory

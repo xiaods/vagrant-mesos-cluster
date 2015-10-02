@@ -6,3 +6,5 @@
   when: installation_type == 'machine'
 
 - include: docker-py.yml
+
+- include: docker-cfg.yml
