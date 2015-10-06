@@ -1,5 +1,5 @@
 ---
-marathon_version: "0.10.1"
-marathon_docker_image: "mesoscloud/marathon:{{marathon_version}}-ubuntu-14.04"
+marathon_version: "v0.11.0"
+marathon_docker_image: "mesosphere/marathon:{{marathon_version}}"
 marathon_name: "marathon"
 marathon_task_launch_timeout: 600000
