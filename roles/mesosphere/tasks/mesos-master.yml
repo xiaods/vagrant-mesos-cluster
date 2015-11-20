@@ -9,6 +9,7 @@
     ports:
       - "5050:5050"
     env:
+      MESOS_CLUSTER: "{{mesos_cluster_name}}"
       MESOS_HOSTNAME: "{{host_ip}}"
       MESOS_IP: "{{host_ip}}"
       MESOS_LOGGING_LEVEL: "{{mesos_logging_level}}"
