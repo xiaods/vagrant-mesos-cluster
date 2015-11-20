@@ -1,9 +1,15 @@
 ---
+- name: Write mesos-master file.
+  template: src=mesos-master.j2 dest=/etc/default/mesos-master
+  sudo: yes
+
 - name: Make sure mesos master is running and config is up-to-date
   sudo: yes
   docker:
     image: "{{mesos_master_docker_image}}"
     name: "{{mesos_master_name}}"
+    volumes:
+      - "/etc/default/mesos-master:/etc/default/mesos-master:rw"
     expose:
       - 5050
     ports:
