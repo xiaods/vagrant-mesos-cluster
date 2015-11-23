@@ -10,5 +10,5 @@
 
 - name: Install Docker
   apt:
-    name: "{{ docker_version | default('docker-engine') }}"
+    name: "{{ docker_engine_version | default('docker-engine') }}"
     state: "present"
