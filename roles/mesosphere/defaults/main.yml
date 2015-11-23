@@ -7,3 +7,4 @@ mesos_agent_name: mesos_agent
 mesos_log_dir: "/var/log/mesos"
 mesos_containerizers: "docker,mesos"
 mesos_docker_stop_timeout: "30secs"
+mesos_cluster_name: "mesos_cluster"
