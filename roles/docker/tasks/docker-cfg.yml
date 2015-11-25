@@ -1,3 +1,14 @@
 ---
 - name: Create /var/marathon
   file: path=/var/marathon/  state=directory
+
+- name: Set docker daemon options
+  copy:
+    content: "DOCKER_OPTS=\"{{ docker_opts }}\""
+    dest: /etc/default/docker
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - Reload docker
+  when: docker_opts != ""
