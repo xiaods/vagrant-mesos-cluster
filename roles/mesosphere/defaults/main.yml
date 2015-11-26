@@ -1,7 +1,7 @@
 ---
-mesos_version: "0.23.0"
-mesos_master_docker_image: "mesoscloud/mesos-master:{{mesos_version}}-ubuntu-14.04"
-mesos_agent_docker_image: "mesoscloud/mesos-slave:{{mesos_version}}-ubuntu-14.04"
+mesos_version: "0.24.1-0.2.35"
+mesos_master_docker_image: "mesosphere/mesos-master:{{mesos_version}}.ubuntu1404"
+mesos_agent_docker_image: "mesosphere/mesos-slave:{{mesos_version}}.ubuntu1404"
 mesos_master_name: mesos_cluster
 mesos_agent_name: mesos_agent
 mesos_log_dir: "/var/log/mesos"
