@@ -1,4 +1,5 @@
 ---
+- include: kernel_update.yml
 - include: apt.yml
 
 - include: hostname.yml
