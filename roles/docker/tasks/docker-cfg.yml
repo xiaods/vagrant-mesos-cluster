@@ -9,6 +9,7 @@
     owner: root
     group: root
     mode: 0644
-  notify:
-    - Reload docker
   when: docker_opts != ""
+
+- name: Reload docker
+  service: name=docker state=reloaded

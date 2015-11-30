@@ -21,9 +21,6 @@
       set_fact:
         kernel_package: "linux-image-3.19.0-33-generic"
 
-  roles:
-    - common
-
 # Mesos masters
 - hosts: mesos-masters
   gather_facts: false
@@ -36,6 +33,7 @@
     - marathon_logging_level: "warn"
 
   roles:
+    - common
     - { role: docker, tags: [ 'docker' ], installation_type: traditional }
     - { role: zookeeper, tags: [ 'zookeeper' ] }
     - { role: mesosphere, tags: [ 'mesos' ], mesos_mode: master }
@@ -52,6 +50,7 @@
     - marathon_logging_level: "warn"
 
   roles:
+    - common
     - { role: docker, tags: [ 'docker' ], installation_type: traditional }
     - { role: mesosphere, tags: [ 'mesos' ], mesos_mode: agent }
     - { role: haproxy_bridge, tags: [ 'haproxy-bridge'] }
