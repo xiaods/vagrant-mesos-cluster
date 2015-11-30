@@ -1,6 +1,6 @@
 ---
 - name: install kernel updates
-  apt: pkg={{kernel_package}} state=latest update_cache=yes
+  apt: pkg={{kernel_package}} update_cache=yes
   register: kernelup
 
 - name: install other updates
