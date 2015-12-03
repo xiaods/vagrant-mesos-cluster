@@ -14,10 +14,12 @@
       - 5051
     env:
       MESOS_CONTAINERIZERS: "{{mesos_containerizers}}"
+      MESOS_CGROUPS_ROOT: "{{mesos_cgroups_root}}"
       MESOS_EXECUTOR_REGISTRATION_TIMEOUT: "{{mesos_executor_registration_timeout}}"
       MESOS_DOCKER_STOP_TIMEOUT: "{{mesos_docker_stop_timeout}}"
       MESOS_HOSTNAME: "{{inventory_hostname}}"
       MESOS_IP: "{{host_ip}}"
+      MESOS_ISOLATION: "{{mesos_isolation}}"
       MESOS_LOGGING_LEVEL: "{{mesos_logging_level}}"
       MESOS_LOG_DIR: "{{mesos_log_dir}}"
       MESOS_MASTER: "{{mesos_zk}}"
