@@ -2,6 +2,7 @@
 - name: install kernel updates
   apt: pkg={{kernel_package}} update_cache=yes
   register: kernelup
+  when: kernel_package is defined
 
 - name: install other updates
   apt: upgrade=dist
