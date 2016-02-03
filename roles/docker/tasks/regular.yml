@@ -4,7 +4,7 @@
 
 - name: Add Docker deb repository
   apt_repository:
-    repo: "deb https://apt.dockerproject.org/repo ubuntu-{{ubuntu_name}} main"
+    repo: "deb https://apt.dockerproject.org/repo ubuntu-{{docker_ubuntu_name}} main"
     state: "present"
     update_cache: yes
 
