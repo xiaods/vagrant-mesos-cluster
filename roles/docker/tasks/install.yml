@@ -11,6 +11,7 @@
 - name: Get kernel version
   command: uname -r
   register: docker_kernel_version
+  changed_when: False
 
 - name: Install linux-image-extra-$(uname -r)
   apt:
