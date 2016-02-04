@@ -10,6 +10,4 @@
     group: root
     mode: 0644
   when: docker_opts != ""
-
-- name: Reload docker
-  service: name=docker state=reloaded
+  notify: Restart docker
