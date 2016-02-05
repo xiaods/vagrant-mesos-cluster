@@ -19,4 +19,4 @@
     privileged: True
     net: host
     restart_policy: always
-    state: restarted
+    state: reloaded
