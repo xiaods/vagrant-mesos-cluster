@@ -7,10 +7,10 @@
   template: src=myid.j2 dest={{zookeeper_myid_path}}
   sudo: yes
 
-- shell: "cat {{zookeeper_myid_path}}"
-  register: cat_zookeeper_id
-
-- debug: var=cat_zookeeper_id.stdout
+- name: Get myid value
+  shell: "cat {{zookeeper_myid_path}}"
+  register: zookeeper_myid
+  changed_when: False
 
 - name: Make sure zookeeper is running and config is up-to-date
   sudo: yes
@@ -28,9 +28,9 @@
       - "2888:2888"
       - "3888:3888"
     env:
-      MYID: "{{ cat_zookeeper_id.stdout }}"
+      MYID: "{{ zookeeper_myid.stdout }}"
       SERVERS: "{{ groups['mesos-masters'] | join(',') }}"
     privileged: True
     net: host
     restart_policy: always
-    state: restarted
+    state: reloaded
