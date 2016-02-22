@@ -33,6 +33,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
         ansible.inventory_path = base_dir + "/inventory/vagrant"
         ansible.playbook = base_dir + "/cluster.yml"
+        # ansible.skip_tags = [ "runtime" ]
         ansible.extra_vars = {
           vagrant_ip: "#{info[:ip]}"
         }

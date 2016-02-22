@@ -1,2 +1,4 @@
 ---
-- include: install.yml
+- include: run.yml
+  tags:
+    - runtime
