@@ -13,40 +13,30 @@ vagrant up
 
 This will provision a mini Mesos cluster with one master, one slave, and one
 HAProxy instance.  The Mesos master server also contains Zookeeper and the
-Marathon framework. The slave will come with Docker installed. 
+Marathon framework. The slave will come with Docker installed.
 
 
-# Deploying Docker containers
+# Running applications
 
-After provisioning the servers you can access Marathon here:
-http://100.0.10.11:8080/ and the master itself here: http://100.0.10.11:5050/
+After provisioning the servers you can access Marathon UI here:
+http://100.0.10.11:8080/ and the Mesos UI here: http://100.0.10.11:5050/
 
-Submitting a Docker container to run on the cluster is done by making a call to
-Marathon's REST API:
-
-First create a file, `ubuntu.json`, with the details of the Docker container that you want to run:
+You can run the test suite of apps by executing this command in the root folder:
 
 ```
-{
-  "container": {
-    "type": "DOCKER",
-    "docker": {
-      "image": "libmesos/ubuntu"
-    }
-  },
-  "id": "ubuntu",
-  "instances": "1",
-  "cpus": "0.5",
-  "mem": "128",
-  "uris": [],
-  "cmd": "while sleep 10; do date -u +%T; done"
-}
+./run.sh
 ```
 
-And second, submit this container to Marathon by using curl:
+This will spawn 3 different applications:
+
+- busybox: A container continuously looping and printing the current `date`
+- http-server: A simple HTTP server listening on service port 15000, monitored by a healthcheck
+- curl: A container continuously looping and executing a `curl` against the previous http-server app on port 15000
+
+## Run custom apps
+
+Create a [Marathon application configuration JSON file](https://mesosphere.github.io/marathon/docs/generated/api.html#v2_apps_post) and run it by executing:
 
 ```
-curl -X POST -H "Content-Type: application/json" http://10.0.10.11:8080/v2/apps -d@ubuntu.json
+curl -X POST -H "Content-Type: application/json" http://100.0.10.11:8080/v2/apps -d@path/to/my/app-config.json
 ```
-
-You can monitor and scale the instance by going to the Marathon web interface linked above. 
