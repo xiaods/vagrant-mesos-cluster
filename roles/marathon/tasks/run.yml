@@ -9,6 +9,7 @@
     expose:
       - 8080
     env:
+      LIBPROCESS_IP: "{{host_ip}}"
       MARATHON_HOSTNAME: "{{inventory_hostname}}"
       MARATHON_HTTPS_ADDRESS: "{{host_ip}}"
       MARATHON_HTTP_ADDRESS: "{{host_ip}}"
