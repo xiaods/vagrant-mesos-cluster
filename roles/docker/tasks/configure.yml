@@ -23,7 +23,7 @@
   lineinfile:
     dest: /lib/systemd/system/docker.service
     regexp: "^ExecStart"
-    line: "ExecStart=/usr/bin/docker -d -H fd:// $DOCKER_OPTS"
+    line: "ExecStart=/usr/bin/docker daemon -H fd:// $DOCKER_OPTS"
     state: present
   register: docker_conf_updated_opts
 
