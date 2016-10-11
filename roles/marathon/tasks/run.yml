@@ -1,6 +1,6 @@
 ---
 - name: Make sure marathon is running and config is up-to-date
-  sudo: yes
+  become: true
   docker:
     image: "{{marathon_docker_image}}"
     name: "{{marathon_name}}"

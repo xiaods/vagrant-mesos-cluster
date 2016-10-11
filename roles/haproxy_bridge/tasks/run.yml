@@ -1,11 +1,11 @@
 ---
 - name: create /etc/dd-agent/conf.d
   file: path={{haproxy_bridge_bin_folder}}/bin state=directory
-  sudo: yes
+  become: true
 
 - name: Add Stickiness
   template: src=patched_haproxy_bridge.j2 dest={{haproxy_bridge_bin_folder}}/bin/haproxy-marathon-bridge
-  sudo: yes
+  become: true
 
 - name: Check wheter bridge script has changed
   command: diff {{haproxy_bridge_bin_folder}}/bin /usr/local/bin/haproxy-marathon-bridge
@@ -13,16 +13,16 @@
   changed_when: False
   ignore_errors: True
   always_run: True
-  sudo: yes
+  become: true
 
 - name: Make sure the haproxy-bridge is executable
   file: path={{haproxy_bridge_bin_folder}}/bin/haproxy-marathon-bridge mode="0755"
-  sudo: yes
+  become: true
 
 - name: Run haproxy bridge install script
   command: "{{haproxy_bridge_bin_folder}}/bin/haproxy-marathon-bridge install_haproxy_system"
   when: marathon_bridge_script_diff.stdout != "" or marathon_bridge_script_diff.stderr != ""
-  sudo: yes
+  become: true
 
 - name: Re-Configure marathon hosts
   template: src=marathons.j2 dest=/etc/haproxy-marathon-bridge/marathons

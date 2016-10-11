@@ -1,4 +1,5 @@
 apt_system_packages:
+  - aptitude
   - build-essential
   - python-setuptools
   - python-pip

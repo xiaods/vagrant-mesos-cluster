@@ -28,7 +28,7 @@
   register: docker_conf_updated_opts
 
 - name: Reload systemd immediately ## https://github.com/ansible/ansible-modules-core/issues/191
-  sudo: yes
+  become: true
   command: systemctl daemon-reload
   when: docker_conf_updated_env.changed or docker_conf_updated_opts.changed
 

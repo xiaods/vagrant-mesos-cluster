@@ -1,6 +1,6 @@
 ---
 - name: Make sure haproxy is running and config is up-to-date
-  sudo: yes
+  become: true
   docker:
     image: "{{haproxy_docker_image}}"
     name: "{{haproxy_name}}"

@@ -1,12 +1,21 @@
 ---
+# Install Python 2 for Ansible to work correctly - needed on Ubuntu 16.04 due to no default installation
 - hosts: all
-  sudo: yes
+  gather_facts: False
+  become: true
+
+  tasks:
+  - name: Install python 2
+    raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+
+- hosts: all
+  become: true
 
   tasks:
     - name: Set global cluster variable facts
       set_fact:
         zk_endpoint: "{{ groups['mesos-masters'] | join(':2181,') }}:2181"
-        host_ip: "{{ vagrant_ip | default(ansible_eth0.ipv4.address) }}"
+        host_ip: "{{ vagrant_ip | default(ansible_default_ipv4.address) }}"
       tags:
         - runtime
 
@@ -26,7 +35,7 @@
 # Mesos masters
 - hosts: mesos-masters
   gather_facts: false
-  sudo: yes
+  become: true
 
   vars:
     - zookeeper_servers: "{{ groups['mesos-masters'] }}"
@@ -44,7 +53,7 @@
 # Mesos slaves
 - hosts: mesos-slaves
   gather_facts: false
-  sudo: yes
+  become: true
 
   vars:
     - mesos_executor_registration_timeout: 5mins
