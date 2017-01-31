@@ -19,7 +19,8 @@
     state: "present"
 
 # Install fixed version (http://www.ubuntuupdates.org/ppa/docker_new)
-- name: Install Docker
+- name: Install Docker {{docker_version}}
   apt:
     name: "docker-engine={{docker_version}}-0~{{docker_ubuntu_name}}"
     state: "present"
+}
