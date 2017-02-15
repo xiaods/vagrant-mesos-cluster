@@ -4,4 +4,4 @@
 
 - name: Apt install required system packages.
   apt: pkg={{item}} state=latest update_cache=yes
-  with_items: apt_system_packages
+  with_items: "{{apt_system_packages}}"
