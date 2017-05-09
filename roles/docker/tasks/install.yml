@@ -1,12 +1,15 @@
 ---
-- name: Get Docker release tool key
-  apt_key: keyserver={{docker_keyserver}} id={{docker_keyserver_id}} state=present
-
-- name: Add Docker deb repository
-  apt_repository:
-    repo: "deb https://apt.dockerproject.org/repo ubuntu-{{docker_ubuntu_name}} main"
-    state: "present"
-    update_cache: yes
+- name: Install packages to allow apt to use a repository over HTTPS
+  apt: name={{item}} state=installed
+  with_items:
+    - apt-transport-https
+    - ca-certificates
+    - curl
+    - python-dev
+    - libssl-dev
+    - libffi-dev
+    - software-properties-common
+  become: true
 
 - name: Get kernel version
   command: uname -r
@@ -18,8 +21,32 @@
     name: "linux-image-extra-{{docker_kernel_version.stdout}}"
     state: "present"
 
-# Install fixed version (http://www.ubuntuupdates.org/ppa/docker_new)
-- name: Install Docker
+- name: Add Docker repository key
+  apt_key:
+    id: "{{ docker_keyserver_id }}"
+    keyserver: "{{ docker_keyserver }}"
+    state: present
+  register: add_repository_key
+  ignore_errors: true
+
+- name: Alternative | Add Docker repository key
+  shell: "curl -sSL {{ docker_keyserver }} | sudo apt-key add -"
+  when: add_repository_key|failed
+
+- name: HTTPS APT transport for Docker repository
   apt:
-    name: "docker-engine={{docker_version}}-0~{{docker_ubuntu_name}}"
-    state: "present"
+    name: apt-transport-https
+    state: present
+
+- name: add docker repository and update apt cache
+  apt_repository:
+    repo: "{{ apt_repository }}"
+    update_cache: yes
+    state: present
+
+- name: Install (or update) docker package
+  apt:
+    name: "{{ docker_pkg_name }}"
+    state: "{{ 'latest' if update_docker_package else 'present' }}"
+    update_cache: "{{ update_docker_package }}"
+    cache_valid_time: "{{ docker_apt_cache_valid_time }}"

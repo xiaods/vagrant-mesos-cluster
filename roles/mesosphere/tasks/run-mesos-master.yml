@@ -5,7 +5,7 @@
 
 - name: Make sure mesos master is running and config is up-to-date
   sudo: yes
-  docker:
+  docker_container:
     image: "{{mesos_master_docker_image}}"
     name: "{{mesos_master_name}}"
     volumes:

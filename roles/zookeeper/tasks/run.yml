@@ -8,7 +8,7 @@
   changed_when: False
 
 - name: Make sure zookeeper is running and config is up-to-date
-  docker:
+  docker_container:
     image: "{{zookeeper_docker_image}}"
     name: "{{zookeeper_name}}"
     volumes:

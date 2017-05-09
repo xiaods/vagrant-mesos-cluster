@@ -1,27 +1,7 @@
 ---
 - hosts: all
-  sudo: yes
-
-  tasks:
-    - name: Set global cluster variable facts
-      set_fact:
-        zk_endpoint: "{{ groups['mesos-masters'] | join(':2181,') }}:2181"
-        host_ip: "{{ vagrant_ip | default(ansible_eth0.ipv4.address) }}"
-      tags:
-        - runtime
-
-    - name: Set global mesos variable facts
-      set_fact:
-        mesos_zk: "zk://{{ zk_endpoint }}/mesos"
-      tags:
-        - runtime
-
-    - name: Set global marathon variable facts
-      set_fact:
-        marathon_host_servers: "{{ groups['mesos-masters'] }}"
-        marathon_zk: "zk://{{ zk_endpoint }}/marathon"
-      tags:
-        - runtime
+  become: true
+  gather_facts: False
 
 # Mesos masters
 - hosts: mesos-masters
@@ -32,14 +12,15 @@
     - zookeeper_servers: "{{ groups['mesos-masters'] }}"
     - mesos_quorum: "{{ ((groups['mesos-masters'] | length) / 2) | round(0, 'ceil') | int }}"
     - mesos_logging_level: "INFO"
-    - marathon_logging_level: "warn"
+    - mesos_install_mode: "master" # {master|slave|master-slave}
+    - mesos_version: "1.2.0"
 
   roles:
     - common
     - { role: docker, tags: [ 'docker' ] }
-    - { role: zookeeper, tags: [ 'zookeeper' ] }
-    - { role: mesosphere, tags: [ 'mesos' ], mesos_mode: master }
-    - { role: marathon, tags: [ 'marathon'] }
+    - { role: geerlingguy.java }
+    - { role: AnsibleShipyard.ansible-zookeeper}
+    - { role: JasonGiedymin.mesos, mesos_install_mode: master}
 
 # Mesos slaves
 - hosts: mesos-slaves
@@ -47,12 +28,13 @@
   sudo: yes
 
   vars:
-    - mesos_executor_registration_timeout: 5mins
     - mesos_logging_level: "WARNING"
-    - marathon_logging_level: "warn"
+    - mesos_containerizers: "docker,mesos"
+    - mesos_executor_timeout: "5mins"
 
   roles:
     - common
     - { role: docker, tags: [ 'docker' ] }
-    - { role: mesosphere, tags: [ 'mesos' ], mesos_mode: agent }
-    - { role: haproxy_bridge, tags: [ 'haproxy-bridge'] }
+    - role: geerlingguy.java
+    - role: JasonGiedymin.mesos
+      mesos_install_mode: slave

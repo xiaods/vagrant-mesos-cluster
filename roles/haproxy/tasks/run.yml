@@ -1,7 +1,7 @@
 ---
 - name: Make sure haproxy is running and config is up-to-date
   sudo: yes
-  docker:
+  docker_container:
     image: "{{haproxy_docker_image}}"
     name: "{{haproxy_name}}"
     ports:

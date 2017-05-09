@@ -3,6 +3,9 @@
   file: path={{zookeeper_data}} state=directory
 
 - name: Pull zookeeper docker image
-  docker:
-    image: "{{zookeeper_docker_image}}"
+  docker_image:
+    name: "{{zookeeper_docker_image}}"
     state: present
+  become: true
+  environment:
+    PYTHONPATH: "/usr/local/lib/python2.7/dist-packages:/usr/local/lib/python2.7/site-packages"

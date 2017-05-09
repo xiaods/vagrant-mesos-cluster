@@ -1,5 +1,5 @@
 ---
 - name: Pull haproxy docker image
-  docker:
-    image: "{{haproxy_docker_image}}"
+  docker_image:
+    name: "{{haproxy_docker_image}}"
     state: present
